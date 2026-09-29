@@ -1,0 +1,134 @@
+/* TableChain Fine-Dining & Web3 Theme Styles */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Cinzel:wght@500;600;700;800&display=swap');
+
+:root {
+  --color-obsidian: #0D0D0F;
+  --color-obsidian-card: #151518;
+  --color-obsidian-border: #26262B;
+  --color-cream: #F8F5EE;
+  --color-cream-soft: #ECE7DC;
+  --color-gold: #C5A880;
+  --color-gold-bright: #E5C378;
+  --color-gold-dim: #8F764D;
+  --color-emerald: #10B981;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: var(--color-obsidian);
+  color: var(--color-cream);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.font-serif-luxury {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+.font-cinzel {
+  font-family: 'Cinzel', serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #0D0D0F;
+}
+::-webkit-scrollbar-thumb {
+  background: #2A2A30;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C5A880;
+}
+
+/* Glassmorphism & Cards */
+.glass-panel {
+  background: rgba(21, 21, 24, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(197, 168, 128, 0.15);
+}
+
+.glass-panel-elevated {
+  background: rgba(26, 26, 30, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(197, 168, 128, 0.22);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #F8F5EE 0%, #E5C378 45%, #C5A880 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-gradient-border {
+  border-image: linear-gradient(to right, #C5A880, #E5C378, #8F764D) 1;
+}
+
+.gold-glow {
+  box-shadow: 0 0 25px rgba(229, 195, 120, 0.15);
+}
+
+.gold-button {
+  background: linear-gradient(135deg, #D4AF37 0%, #C5A880 100%);
+  color: #0D0D0F;
+  font-weight: 600;
+  transition: all 0.25s ease-in-out;
+}
+.gold-button:hover {
+  background: linear-gradient(135deg, #E5C378 0%, #D4AF37 100%);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
+  transform: translateY(-1px);
+}
+.gold-button:active {
+  transform: translateY(0);
+}
+
+/* Smooth badge styling */
+.badge-gold {
+  background: rgba(197, 168, 128, 0.12);
+  color: #E5C378;
+  border: 1px solid rgba(197, 168, 128, 0.3);
+}
+
+.badge-sepolia {
+  background: rgba(110, 86, 207, 0.15);
+  color: #BDB4FE;
+  border: 1px solid rgba(110, 86, 207, 0.35);
+}
+
+/* Shimmer animation */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.animate-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+  animation: shimmer 2s infinite;
+}
+
+/* Pulse on live web3 status */
+@keyframes web3-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.15); }
+}
+
+.pulse-dot {
+  animation: web3-pulse 2s infinite ease-in-out;
+}

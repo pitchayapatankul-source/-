@@ -1,0 +1,109 @@
+[
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "string", "name": "bookingIdIndexed", "type": "string" },
+      { "indexed": false, "internalType": "string", "name": "bookingId", "type": "string" },
+      { "indexed": true, "internalType": "address", "name": "customerWallet", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "restaurantWallet", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256" }
+    ],
+    "name": "BookingPaid",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "string", "name": "bookingId", "type": "string" },
+      { "indexed": true, "internalType": "address", "name": "restaurantWallet", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "amountToRestaurant", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "feeToPlatform", "type": "uint256" }
+    ],
+    "name": "BookingSettled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "string", "name": "bookingId", "type": "string" },
+      { "indexed": true, "internalType": "address", "name": "customerWallet", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "refundAmount", "type": "uint256" }
+    ],
+    "name": "BookingRefunded",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      { "internalType": "string", "name": "bookingId", "type": "string" },
+      { "internalType": "address payable", "name": "restaurantWallet", "type": "address" }
+    ],
+    "name": "payBookingFee",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "string", "name": "bookingId", "type": "string" }
+    ],
+    "name": "payBookingFeeDirect",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "string", "name": "bookingId", "type": "string" }
+    ],
+    "name": "getBooking",
+    "outputs": [
+      { "internalType": "string", "name": "_bookingId", "type": "string" },
+      { "internalType": "address", "name": "customer", "type": "address" },
+      { "internalType": "address", "name": "restaurantWallet", "type": "address" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "internalType": "uint256", "name": "timestamp", "type": "uint256" },
+      { "internalType": "uint8", "name": "status", "type": "uint8" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "string", "name": "bookingId", "type": "string" }
+    ],
+    "name": "refundBooking",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "string", "name": "bookingId", "type": "string" }
+    ],
+    "name": "settleBooking",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "customer", "type": "address" }
+    ],
+    "name": "getCustomerBookings",
+    "outputs": [
+      { "internalType": "string[]", "name": "", "type": "string[]" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "stateMutability": "payable",
+    "type": "receive"
+  }
+]

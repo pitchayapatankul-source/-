@@ -1,0 +1,3544 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TableChain | Reserve Your Table. Secure Your Booking On-Chain.</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            obsidian: '#0D0D0F',
+            'obsidian-card': '#151518',
+            cream: '#F8F5EE',
+            'cream-soft': '#ECE7DC',
+            gold: '#C5A880',
+            'gold-bright': '#E5C378',
+            'gold-dim': '#8F764D',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Ethers.js v6 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <!-- QRCode.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <!-- Custom Theme CSS -->
+  <style>
+/* TableChain Fine-Dining & Web3 Theme Styles */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Cinzel:wght@500;600;700;800&display=swap');
+
+:root {
+  --color-obsidian: #0D0D0F;
+  --color-obsidian-card: #151518;
+  --color-obsidian-border: #26262B;
+  --color-cream: #F8F5EE;
+  --color-cream-soft: #ECE7DC;
+  --color-gold: #C5A880;
+  --color-gold-bright: #E5C378;
+  --color-gold-dim: #8F764D;
+  --color-emerald: #10B981;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: var(--color-obsidian);
+  color: var(--color-cream);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.font-serif-luxury {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+.font-cinzel {
+  font-family: 'Cinzel', serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #0D0D0F;
+}
+::-webkit-scrollbar-thumb {
+  background: #2A2A30;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C5A880;
+}
+
+/* Glassmorphism & Cards */
+.glass-panel {
+  background: rgba(21, 21, 24, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(197, 168, 128, 0.15);
+}
+
+.glass-panel-elevated {
+  background: rgba(26, 26, 30, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(197, 168, 128, 0.22);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #F8F5EE 0%, #E5C378 45%, #C5A880 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-gradient-border {
+  border-image: linear-gradient(to right, #C5A880, #E5C378, #8F764D) 1;
+}
+
+.gold-glow {
+  box-shadow: 0 0 25px rgba(229, 195, 120, 0.15);
+}
+
+.gold-button {
+  background: linear-gradient(135deg, #D4AF37 0%, #C5A880 100%);
+  color: #0D0D0F;
+  font-weight: 600;
+  transition: all 0.25s ease-in-out;
+}
+.gold-button:hover {
+  background: linear-gradient(135deg, #E5C378 0%, #D4AF37 100%);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
+  transform: translateY(-1px);
+}
+.gold-button:active {
+  transform: translateY(0);
+}
+
+/* Smooth badge styling */
+.badge-gold {
+  background: rgba(197, 168, 128, 0.12);
+  color: #E5C378;
+  border: 1px solid rgba(197, 168, 128, 0.3);
+}
+
+.badge-sepolia {
+  background: rgba(110, 86, 207, 0.15);
+  color: #BDB4FE;
+  border: 1px solid rgba(110, 86, 207, 0.35);
+}
+
+/* Shimmer animation */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.animate-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+  animation: shimmer 2s infinite;
+}
+
+/* Pulse on live web3 status */
+@keyframes web3-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.15); }
+}
+
+.pulse-dot {
+  animation: web3-pulse 2s infinite ease-in-out;
+}
+
+</style>
+</head>
+<body class="bg-[#0D0D0F] text-[#F8F5EE] antialiased selection:bg-[#C5A880]/30 selection:text-white">
+
+  <!-- ================= TOP DEMO NOTIFICATION BANNER ================= -->
+  <div class="bg-gradient-to-r from-stone-900 via-purple-950/40 to-stone-900 border-b border-purple-500/20 py-1.5 px-4 text-center text-xs text-purple-200 flex items-center justify-center gap-2">
+    <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block pulse-dot"></span>
+    <span class="font-medium">Demo Blockchain Network — No real cryptocurrency required</span>
+    <span class="text-stone-500">|</span>
+    <span class="text-purple-300 font-mono text-[11px]">Ethereum Sepolia Testnet</span>
+    <button onclick="resetDemoData()" class="ml-3 text-[11px] underline text-stone-400 hover:text-amber-300 transition-colors">
+      Reset Demo DB
+    </button>
+  </div>
+
+  <!-- ================= NAVIGATION BAR ================= -->
+  <header class="sticky top-0 z-40 bg-[#0D0D0F]/90 backdrop-blur-md border-b border-[#C5A880]/15">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#home" onclick="navigateTo('home')" class="flex items-center space-x-3 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#E5C378] to-[#8F764D] p-0.5 shadow-md group-hover:shadow-[#C5A880]/30 transition-shadow">
+          <div class="w-full h-full bg-[#0D0D0F] rounded-[10px] flex items-center justify-center">
+            <span class="font-cinzel text-lg font-bold text-[#E5C378]">TC</span>
+          </div>
+        </div>
+        <div>
+          <span class="font-cinzel text-xl font-bold tracking-wider text-[#F8F5EE] group-hover:text-[#E5C378] transition-colors">
+            TABLECHAIN
+          </span>
+          <span class="block text-[9px] uppercase tracking-widest text-[#C5A880]/70 font-semibold -mt-1">
+            Fine Dining &bull; On-Chain
+          </span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+        <button onclick="navigateTo('home')" class="nav-link py-1 transition-colors hover:text-[#E5C378]" data-target="home">
+          Home
+        </button>
+        <button onclick="navigateTo('restaurants')" class="nav-link py-1 transition-colors hover:text-[#E5C378]" data-target="restaurants">
+          Restaurants
+        </button>
+        <a href="#how-it-works-section" onclick="navigateTo('home'); setTimeout(() => document.getElementById('how-it-works-section')?.scrollIntoView({behavior:'smooth'}), 100);" class="nav-link py-1 transition-colors hover:text-[#E5C378]">
+          How It Works
+        </a>
+        <button onclick="navigateTo('my-bookings')" class="nav-link py-1 transition-colors hover:text-[#E5C378] flex items-center" data-target="my-bookings">
+          <span>My Reservations</span>
+        </button>
+        <button onclick="navigateTo('admin')" class="nav-link py-1 transition-colors hover:text-[#E5C378] flex items-center text-stone-400" data-target="admin">
+          <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 mr-1.5 text-stone-400"></i>
+          <span>Admin</span>
+        </button>
+        <button onclick="navigateTo('smart-contract')" class="nav-link py-1 transition-colors hover:text-[#E5C378] flex items-center text-stone-400" data-target="smart-contract">
+          <i data-lucide="code" class="w-3.5 h-3.5 mr-1 text-[#C5A880]"></i>
+          <span>Contract</span>
+        </button>
+      </nav>
+
+      <!-- Right Controls: Network & Wallet Button -->
+      <div class="flex items-center space-x-3 relative">
+        <div id="network-badge" class="hidden sm:inline-flex items-center text-xs px-2.5 py-1 rounded-full border border-purple-500/30 bg-purple-950/20 text-purple-300">
+          <span class="w-1.5 h-1.5 rounded-full bg-purple-400 mr-1.5"></span>
+          <span>Sepolia Testnet</span>
+        </div>
+
+        <!-- Connect MetaMask Button -->
+        <button id="connect-wallet-btn" class="gold-button flex items-center px-4 py-2 rounded-full text-xs sm:text-sm font-semibold shadow-md">
+          <i data-lucide="wallet" class="w-4 h-4 mr-2 text-stone-900"></i>
+          <span>Connect MetaMask</span>
+        </button>
+
+        <!-- Connected Wallet Dropdown -->
+        <div id="wallet-dropdown" class="hidden absolute right-0 top-12 w-64 glass-panel-elevated rounded-xl p-3 z-50 text-xs shadow-2xl border border-[#C5A880]/30 animate-in fade-in">
+          <div class="pb-2 border-b border-stone-800">
+            <span class="text-[10px] text-stone-500 uppercase tracking-wider block">Connected Account</span>
+            <div id="dropdown-wallet-address" class="font-mono text-stone-200 font-semibold mt-0.5">0x...</div>
+            <div id="dropdown-wallet-network" class="text-[11px] text-purple-400 mt-1">Sepolia Testnet (11155111)</div>
+          </div>
+          <div class="pt-2 space-y-1">
+            <button id="copy-address-btn" class="w-full text-left px-2 py-1.5 rounded hover:bg-stone-800 text-stone-300 flex items-center">
+              <i data-lucide="copy" class="w-3.5 h-3.5 mr-2 text-stone-400"></i> Copy Address
+            </button>
+            <a id="dropdown-etherscan-link" href="#" target="_blank" class="w-full text-left px-2 py-1.5 rounded hover:bg-stone-800 text-stone-300 flex items-center">
+              <i data-lucide="external-link" class="w-3.5 h-3.5 mr-2 text-stone-400"></i> View on Sepolia Etherscan
+            </a>
+            <button id="disconnect-wallet-btn" class="w-full text-left px-2 py-1.5 rounded hover:bg-rose-950/40 text-rose-400 flex items-center">
+              <i data-lucide="log-out" class="w-3.5 h-3.5 mr-2"></i> Disconnect
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile Menu Toggle -->
+        <button onclick="document.getElementById('mobile-nav').classList.toggle('hidden')" class="md:hidden p-2 rounded-lg text-stone-400 hover:text-white">
+          <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-nav" class="hidden md:hidden border-t border-stone-800 bg-[#0D0D0F] px-4 py-4 space-y-3">
+      <button onclick="navigateTo('home'); document.getElementById('mobile-nav').classList.add('hidden')" class="block w-full text-left text-sm py-2 text-stone-300 hover:text-[#E5C378]">Home</button>
+      <button onclick="navigateTo('restaurants'); document.getElementById('mobile-nav').classList.add('hidden')" class="block w-full text-left text-sm py-2 text-stone-300 hover:text-[#E5C378]">Browse Restaurants</button>
+      <button onclick="navigateTo('my-bookings'); document.getElementById('mobile-nav').classList.add('hidden')" class="block w-full text-left text-sm py-2 text-stone-300 hover:text-[#E5C378]">My Reservations</button>
+      <button onclick="navigateTo('admin'); document.getElementById('mobile-nav').classList.add('hidden')" class="block w-full text-left text-sm py-2 text-stone-300 hover:text-[#E5C378]">Restaurant Admin</button>
+      <button onclick="navigateTo('smart-contract'); document.getElementById('mobile-nav').classList.add('hidden')" class="block w-full text-left text-sm py-2 text-stone-300 hover:text-[#E5C378]">Smart Contract</button>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT VIEWS ================= -->
+  <main class="min-h-[calc(100vh-160px)]">
+
+    <!-- 1. LANDING PAGE VIEW -->
+    <div id="view-home" class="page-view">
+      
+      <!-- HERO SECTION -->
+      <section class="relative min-h-[85vh] flex items-center justify-center overflow-hidden py-16 px-4 sm:px-6 lg:px-8">
+        <!-- Background Photography with Vignette & Ambient Glow -->
+        <div class="absolute inset-0 z-0">
+          <img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=2000&auto=format&fit=crop" 
+               alt="Fine dining table ambiance" 
+               class="w-full h-full object-cover brightness-[0.28] scale-105 filter blur-[0.5px]" />
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0D0D0F] via-[#0D0D0F]/70 to-transparent"></div>
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(197,168,128,0.12)_0%,transparent_70%)]"></div>
+        </div>
+
+        <div class="relative z-10 max-w-5xl mx-auto text-center">
+          
+          <!-- Subtle Luxury Badge -->
+          <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-[#C5A880]/30 bg-[#151518]/80 backdrop-blur-md mb-8 animate-fade-in">
+            <span class="w-2 h-2 rounded-full bg-[#E5C378] pulse-dot"></span>
+            <span class="text-xs uppercase tracking-widest text-[#E5C378] font-semibold">Web3 Restaurant Reservations</span>
+          </div>
+
+          <!-- Main Hero Headline -->
+          <h1 class="text-4xl sm:text-6xl md:text-7xl font-serif-luxury font-bold tracking-tight text-[#F8F5EE] leading-[1.1] mb-6">
+            Reserve Your Table. <br />
+            <span class="gold-gradient-text font-serif-luxury italic">Secure Your Booking On-Chain.</span>
+          </h1>
+
+          <!-- Hero Subheadline -->
+          <p class="max-w-2xl mx-auto text-base sm:text-lg text-stone-300 font-light leading-relaxed mb-10">
+            Find restaurants, reserve your table, and secure your booking with a transparent blockchain payment.
+          </p>
+
+          <!-- Hero Action Buttons -->
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5">
+            <button onclick="navigateTo('restaurants')" class="w-full sm:w-auto gold-button px-8 py-4 rounded-xl text-stone-950 font-bold text-sm tracking-wide shadow-xl flex items-center justify-center space-x-2 group">
+              <span>Find a Restaurant</span>
+              <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+            </button>
+
+            <button id="hero-connect-wallet-btn" class="w-full sm:w-auto px-7 py-4 rounded-xl border border-[#C5A880]/40 hover:border-[#C5A880] hover:bg-[#C5A880]/10 text-[#E5C378] text-sm font-semibold transition-all backdrop-blur-sm flex items-center justify-center space-x-2">
+              <i data-lucide="wallet" class="w-4 h-4"></i>
+              <span>Connect Wallet</span>
+            </button>
+          </div>
+
+          <!-- Trust Badges & Highlights -->
+          <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto pt-10 border-t border-[#C5A880]/15">
+            <div class="p-3 text-center">
+              <div class="text-xl font-serif font-bold text-[#E5C378]">100%</div>
+              <div class="text-[11px] text-stone-400 uppercase tracking-wider mt-0.5">Guaranteed Placement</div>
+            </div>
+            <div class="p-3 text-center">
+              <div class="text-xl font-serif font-bold text-[#E5C378]">0%</div>
+              <div class="text-[11px] text-stone-400 uppercase tracking-wider mt-0.5">Double Bookings</div>
+            </div>
+            <div class="p-3 text-center">
+              <div class="text-xl font-serif font-bold text-[#E5C378]">MetaMask</div>
+              <div class="text-[11px] text-stone-400 uppercase tracking-wider mt-0.5">Instant Web3 Escrow</div>
+            </div>
+            <div class="p-3 text-center">
+              <div class="text-xl font-serif font-bold text-[#E5C378]">Sepolia</div>
+              <div class="text-[11px] text-stone-400 uppercase tracking-wider mt-0.5">Verified Testnet</div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- FEATURED RESTAURANTS SECTION -->
+      <section class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+          <div>
+            <span class="text-xs uppercase tracking-widest text-[#C5A880] font-semibold block mb-2">Curated Collection</span>
+            <h2 class="text-3xl sm:text-4xl font-serif-luxury font-bold text-[#F8F5EE]">
+              Featured Establishments
+            </h2>
+          </div>
+          <button onclick="navigateTo('restaurants')" class="mt-4 md:mt-0 text-sm font-semibold text-[#E5C378] hover:text-white flex items-center group">
+            <span>Explore All Restaurants</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"></i>
+          </button>
+        </div>
+
+        <div id="featured-restaurants-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Populated by JavaScript -->
+        </div>
+      </section>
+
+      <!-- HOW IT WORKS SECTION -->
+      <section id="how-it-works-section" class="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#0D0D0F] via-[#141417] to-[#0D0D0F] border-y border-[#C5A880]/10">
+        <div class="max-w-7xl mx-auto">
+          
+          <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-xs uppercase tracking-widest text-[#C5A880] font-semibold block mb-2">Frictionless Experience</span>
+            <h2 class="text-3xl sm:text-4xl font-serif-luxury font-bold text-[#F8F5EE] mb-4">
+              How TableChain Works
+            </h2>
+            <p class="text-stone-400 text-sm sm:text-base font-light">
+              Booking your fine dining experience takes seconds. Your booking fee is securely held on the blockchain and credited toward your dining bill.
+            </p>
+          </div>
+
+          <!-- 4 Steps Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            
+            <!-- Step 1 -->
+            <div class="glass-panel p-6 rounded-2xl relative group hover:border-[#C5A880]/40 transition-all">
+              <div class="w-12 h-12 rounded-xl bg-stone-900 border border-stone-800 flex items-center justify-center text-[#E5C378] mb-6 group-hover:bg-[#C5A880] group-hover:text-stone-900 transition-colors">
+                <i data-lucide="compass" class="w-6 h-6"></i>
+              </div>
+              <span class="text-xs font-mono text-[#C5A880] font-bold block mb-1">STEP 01</span>
+              <h3 class="text-xl font-serif font-bold text-stone-100 mb-2">Find a Restaurant</h3>
+              <p class="text-xs text-stone-400 leading-relaxed">
+                Browse restaurants and choose where you want to dine. Filter by cuisine, ambiance, location, and guest ratings.
+              </p>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="glass-panel p-6 rounded-2xl relative group hover:border-[#C5A880]/40 transition-all">
+              <div class="w-12 h-12 rounded-xl bg-stone-900 border border-stone-800 flex items-center justify-center text-[#E5C378] mb-6 group-hover:bg-[#C5A880] group-hover:text-stone-900 transition-colors">
+                <i data-lucide="calendar" class="w-6 h-6"></i>
+              </div>
+              <span class="text-xs font-mono text-[#C5A880] font-bold block mb-1">STEP 02</span>
+              <h3 class="text-xl font-serif font-bold text-stone-100 mb-2">Reserve Your Table</h3>
+              <p class="text-xs text-stone-400 leading-relaxed">
+                Choose your preferred date, time, and number of guests. Our smart engine verifies live table capacity in real-time.
+              </p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="glass-panel p-6 rounded-2xl relative group hover:border-[#C5A880]/40 transition-all">
+              <div class="w-12 h-12 rounded-xl bg-stone-900 border border-stone-800 flex items-center justify-center text-[#E5C378] mb-6 group-hover:bg-[#C5A880] group-hover:text-stone-900 transition-colors">
+                <i data-lucide="wallet-cards" class="w-6 h-6"></i>
+              </div>
+              <span class="text-xs font-mono text-[#C5A880] font-bold block mb-1">STEP 03</span>
+              <h3 class="text-xl font-serif font-bold text-stone-100 mb-2">Pay Booking Fee</h3>
+              <p class="text-xs text-stone-400 leading-relaxed">
+                Connect MetaMask and securely pay the booking fee. Uses Ethereum Sepolia Testnet for instant, zero-cost trial payments.
+              </p>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="glass-panel p-6 rounded-2xl relative group hover:border-[#C5A880]/40 transition-all">
+              <div class="w-12 h-12 rounded-xl bg-stone-900 border border-stone-800 flex items-center justify-center text-[#E5C378] mb-6 group-hover:bg-[#C5A880] group-hover:text-stone-900 transition-colors">
+                <i data-lucide="badge-check" class="w-6 h-6"></i>
+              </div>
+              <span class="text-xs font-mono text-[#C5A880] font-bold block mb-1">STEP 04</span>
+              <h3 class="text-xl font-serif font-bold text-stone-100 mb-2">Booking Confirmed</h3>
+              <p class="text-xs text-stone-400 leading-relaxed">
+                The blockchain transaction verifies your reservation. Receive an on-chain transaction hash and an arrival QR code.
+              </p>
+            </div>
+
+          </div>
+
+          <!-- Bottom CTA in How it Works -->
+          <div class="mt-16 text-center">
+            <button onclick="navigateTo('restaurants')" class="gold-button px-8 py-3.5 rounded-xl text-stone-950 font-bold text-sm tracking-wide shadow-lg">
+              Explore Available Restaurants
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+
+    <!-- 2. RESTAURANT DISCOVERY VIEW -->
+    <div id="view-restaurants" class="page-view hidden py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      
+      <!-- Discovery Header -->
+      <div class="mb-10 text-center sm:text-left">
+        <span class="text-xs uppercase tracking-widest text-[#C5A880] font-semibold block mb-1">Reservations</span>
+        <h2 class="text-3xl sm:text-4xl font-serif-luxury font-bold text-[#F8F5EE]">
+          Discover Fine Dining
+        </h2>
+        <p class="text-sm text-stone-400 mt-1">Book premier tables in Chiang Mai with cryptographically verified reservations.</p>
+      </div>
+
+      <!-- Search & Filter Bar -->
+      <div class="glass-panel p-4 sm:p-5 rounded-2xl mb-10 border border-[#C5A880]/20 space-y-4">
+        
+        <!-- Search Input -->
+        <div class="relative">
+          <i data-lucide="search" class="w-5 h-5 absolute left-4 top-3.5 text-stone-500"></i>
+          <input type="text" id="restaurant-search-input" 
+                 placeholder="Search by restaurant name, cuisine, or location (e.g. Steakhouse, Nimman, Sakura)..."
+                 class="w-full pl-12 pr-4 py-3 rounded-xl bg-stone-900/90 border border-stone-800 text-stone-100 placeholder-stone-500 text-sm focus:outline-none focus:border-[#C5A880] transition-colors" />
+        </div>
+
+        <!-- Filter Tags -->
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+          
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-xs text-stone-400 mr-2 flex items-center">
+              <i data-lucide="filter" class="w-3.5 h-3.5 mr-1 text-[#C5A880]"></i> Cuisine:
+            </span>
+            <button type="button" class="cuisine-filter-btn px-3 py-1 rounded-full text-xs font-semibold bg-[#C5A880] text-stone-900" data-cuisine="All">All</button>
+            <button type="button" class="cuisine-filter-btn px-3 py-1 rounded-full text-xs font-semibold bg-stone-900 text-stone-300 border border-stone-800 hover:border-stone-700" data-cuisine="Steakhouse">Steakhouse</button>
+            <button type="button" class="cuisine-filter-btn px-3 py-1 rounded-full text-xs font-semibold bg-stone-900 text-stone-300 border border-stone-800 hover:border-stone-700" data-cuisine="Thai">Thai Contemporary</button>
+            <button type="button" class="cuisine-filter-btn px-3 py-1 rounded-full text-xs font-semibold bg-stone-900 text-stone-300 border border-stone-800 hover:border-stone-700" data-cuisine="Japanese">Japanese</button>
+            <button type="button" class="cuisine-filter-btn px-3 py-1 rounded-full text-xs font-semibold bg-stone-900 text-stone-300 border border-stone-800 hover:border-stone-700" data-cuisine="French">French</button>
+          </div>
+
+          <div id="filtered-results-count" class="text-xs text-stone-400 font-mono">
+            Loading restaurants...
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Restaurant Cards Grid -->
+      <div id="restaurants-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Injected via JavaScript -->
+      </div>
+
+    </div>
+
+    <!-- 3. RESTAURANT DETAIL VIEW -->
+    <div id="view-restaurant-detail" class="page-view hidden py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      
+      <!-- Back Link -->
+      <button onclick="navigateTo('restaurants')" class="inline-flex items-center text-xs text-stone-400 hover:text-[#E5C378] transition-colors mb-6">
+        <i data-lucide="arrow-left" class="w-4 h-4 mr-1.5"></i>
+        <span>Back to Restaurant Directory</span>
+      </button>
+
+      <!-- Main Layout: Info on Left (60%), Booking Panel on Right (40%) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left Column: Gallery & Restaurant Details -->
+        <div class="lg:col-span-7 xl:col-span-8 space-y-8">
+          
+          <!-- Large Image & Gallery -->
+          <div class="space-y-3">
+            <div class="h-96 w-full rounded-2xl overflow-hidden bg-stone-900 relative border border-stone-800">
+              <img id="detail-hero-image" src="" alt="Restaurant gallery hero" class="w-full h-full object-cover" />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+              
+              <!-- Badges -->
+              <div class="absolute top-4 right-4 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 flex items-center text-sm font-semibold text-amber-300">
+                <i data-lucide="star" class="w-4 h-4 fill-amber-400 text-amber-400 mr-1.5"></i>
+                <span id="detail-rating">4.8</span>
+              </div>
+            </div>
+
+            <!-- Gallery Thumbnails -->
+            <div id="detail-gallery-grid" class="grid grid-cols-4 gap-3">
+              <!-- Injected by JS -->
+            </div>
+          </div>
+
+          <!-- Restaurant Title & Header Info -->
+          <div>
+            <div class="flex items-center gap-3 mb-2">
+              <span id="detail-cuisine" class="text-xs font-semibold px-3 py-1 rounded-full bg-[#C5A880]/15 text-[#E5C378] border border-[#C5A880]/30">Cuisine</span>
+              <span id="detail-location" class="text-xs text-stone-400 flex items-center">
+                <i data-lucide="map-pin" class="w-3.5 h-3.5 mr-1 text-stone-500"></i> Location
+              </span>
+            </div>
+            <h1 id="detail-name" class="text-3xl sm:text-4xl font-serif-luxury font-bold text-stone-100">Restaurant Name</h1>
+            <p id="detail-hours" class="text-xs text-stone-400 mt-1 flex items-center">
+              <i data-lucide="clock" class="w-3.5 h-3.5 mr-1 text-stone-500"></i> Hours
+            </p>
+          </div>
+
+          <!-- Description -->
+          <div class="glass-panel p-6 rounded-2xl border border-stone-800">
+            <h3 class="text-base font-serif font-bold text-stone-200 mb-3">About the Establishment</h3>
+            <p id="detail-desc" class="text-sm text-stone-400 leading-relaxed font-light"></p>
+          </div>
+
+          <!-- Facilities -->
+          <div class="glass-panel p-6 rounded-2xl border border-stone-800">
+            <h3 class="text-base font-serif font-bold text-stone-200 mb-4">Establishment Facilities</h3>
+            <div id="detail-facilities" class="flex flex-wrap gap-2.5">
+              <!-- Injected by JS -->
+            </div>
+          </div>
+
+          <!-- Menu Preview -->
+          <div class="glass-panel p-6 rounded-2xl border border-stone-800">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-base font-serif font-bold text-stone-200">Signature Menu Highlights</h3>
+              <span class="text-xs text-stone-500">A La Carte / Tasting</span>
+            </div>
+            <div id="detail-menu" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <!-- Injected by JS -->
+            </div>
+          </div>
+
+          <!-- Policies -->
+          <div class="glass-panel p-6 rounded-2xl border border-stone-800 space-y-4">
+            <h3 class="text-base font-serif font-bold text-stone-200">Booking & Cancellation Policies</h3>
+            
+            <div class="space-y-3 text-xs text-stone-400 leading-relaxed">
+              <div class="flex items-start gap-2.5">
+                <i data-lucide="shield-alert" class="w-4 h-4 text-[#C5A880] flex-shrink-0 mt-0.5"></i>
+                <div>
+                  <strong class="text-stone-300 block mb-0.5">Booking Fee Policy:</strong>
+                  The required booking fee is paid via cryptocurrency and securely escrowed via smart contract. Upon arrival, the full booking fee is credited toward your restaurant bill.
+                </div>
+              </div>
+
+              <div class="flex items-start gap-2.5">
+                <i data-lucide="rotate-ccw" class="w-4 h-4 text-[#C5A880] flex-shrink-0 mt-0.5"></i>
+                <div>
+                  <strong class="text-stone-300 block mb-0.5">Cancellation Policy:</strong>
+                  <span id="detail-cancellation">Full refund of booking fee if cancelled at least 4 hours before dining time.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Sticky Interactive Reservation Panel -->
+        <div class="lg:col-span-5 xl:col-span-4 sticky top-28">
+          
+          <div class="glass-panel-elevated p-6 rounded-2xl border border-[#C5A880]/30 shadow-2xl space-y-6">
+            
+            <div>
+              <span class="text-[10px] uppercase tracking-wider text-[#C5A880] font-bold block">Instant Reservation</span>
+              <h3 class="text-xl font-serif font-bold text-stone-100">Reserve a Table</h3>
+            </div>
+
+            <!-- Form -->
+            <form id="reservation-panel-form" onsubmit="event.preventDefault(); proceedToCheckout();" class="space-y-5">
+              
+              <!-- 1. Select Date -->
+              <div>
+                <label class="block text-xs font-semibold text-stone-300 mb-2 flex items-center">
+                  <i data-lucide="calendar" class="w-3.5 h-3.5 mr-1.5 text-[#C5A880]"></i>
+                  Select Date
+                </label>
+                <input type="date" id="booking-date-picker" 
+                       class="w-full px-3.5 py-2.5 rounded-xl bg-stone-900 border border-stone-800 text-stone-100 text-xs font-medium focus:outline-none focus:border-[#C5A880]" />
+              </div>
+
+              <!-- 2. Select Number of Guests -->
+              <div>
+                <label class="block text-xs font-semibold text-stone-300 mb-2 flex items-center">
+                  <i data-lucide="users" class="w-3.5 h-3.5 mr-1.5 text-[#C5A880]"></i>
+                  Number of Guests
+                </label>
+                <div id="booking-guest-selector" class="flex flex-wrap gap-1.5">
+                  <!-- Injected via JS -->
+                </div>
+              </div>
+
+              <!-- 3. Available Time Slots -->
+              <div>
+                <label class="block text-xs font-semibold text-stone-300 mb-2 flex items-center justify-between">
+                  <span class="flex items-center">
+                    <i data-lucide="clock" class="w-3.5 h-3.5 mr-1.5 text-[#C5A880]"></i>
+                    Available Time Slots
+                  </span>
+                  <span class="text-[10px] text-stone-500 font-normal">7 slots today</span>
+                </label>
+                <div id="booking-time-slots" class="grid grid-cols-4 gap-2">
+                  <!-- Injected via JS -->
+                </div>
+              </div>
+
+              <!-- 4. Table Preference (Optional) -->
+              <div>
+                <label class="block text-xs font-semibold text-stone-300 mb-2 flex items-center">
+                  <i data-lucide="layers" class="w-3.5 h-3.5 mr-1.5 text-[#C5A880]"></i>
+                  Table Preference
+                </label>
+                <select id="booking-table-select" class="w-full px-3.5 py-2.5 rounded-xl bg-stone-900 border border-stone-800 text-stone-300 text-xs focus:outline-none focus:border-[#C5A880]">
+                  <option value="">Auto-Assign Best Available Table</option>
+                </select>
+              </div>
+
+              <!-- 5. Customer Contact Info -->
+              <div class="space-y-3 pt-3 border-t border-stone-800">
+                <span class="text-xs font-semibold text-stone-300 block">Diner Information</span>
+                <input type="text" id="customer-name-input" placeholder="Full Name (e.g. Alex Mercer)" required
+                       class="w-full px-3.5 py-2 rounded-lg bg-stone-900 border border-stone-800 text-stone-200 text-xs focus:outline-none focus:border-[#C5A880]" />
+                <div class="grid grid-cols-2 gap-2">
+                  <input type="tel" id="customer-phone-input" placeholder="Phone Number" 
+                         class="w-full px-3.5 py-2 rounded-lg bg-stone-900 border border-stone-800 text-stone-200 text-xs focus:outline-none focus:border-[#C5A880]" />
+                  <input type="email" id="customer-email-input" placeholder="Email Address" 
+                         class="w-full px-3.5 py-2 rounded-lg bg-stone-900 border border-stone-800 text-stone-200 text-xs focus:outline-none focus:border-[#C5A880]" />
+                </div>
+                <input type="text" id="customer-requests-input" placeholder="Special Requests / Dietary Requirements" 
+                       class="w-full px-3.5 py-2 rounded-lg bg-stone-900 border border-stone-800 text-stone-200 text-xs focus:outline-none focus:border-[#C5A880]" />
+              </div>
+
+              <!-- Reservation Summary Box -->
+              <div class="p-4 rounded-xl bg-stone-900/80 border border-stone-800 space-y-2 text-xs">
+                <span class="text-[10px] uppercase font-bold tracking-wider text-stone-400 block mb-1">Reservation Summary</span>
+                
+                <div class="flex justify-between text-stone-300">
+                  <span>Date & Time</span>
+                  <span class="font-medium text-stone-100"><span id="summary-date">-</span> at <span id="summary-time">19:00</span></span>
+                </div>
+
+                <div class="flex justify-between text-stone-300">
+                  <span>Guests</span>
+                  <span id="summary-guests" class="font-medium text-stone-100">2 Guests</span>
+                </div>
+
+                <div class="flex justify-between text-stone-300">
+                  <span>Table</span>
+                  <span id="summary-table" class="font-medium text-stone-100">Smart Auto-Selection</span>
+                </div>
+
+                <div class="flex justify-between text-stone-300">
+                  <span>Blockchain Network</span>
+                  <span class="text-purple-300 font-mono text-[11px]">Ethereum / Sepolia Testnet</span>
+                </div>
+
+                <div class="flex justify-between items-baseline pt-2 border-t border-stone-800 text-stone-200">
+                  <span class="font-semibold text-stone-100">Booking Fee</span>
+                  <div class="text-right">
+                    <span id="summary-fee-eth" class="font-bold text-[#E5C378] text-sm font-mono block">0.002 ETH</span>
+                    <span id="summary-fee-thb" class="text-[10px] text-stone-400 block">≈ 250 THB</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Submit CTA -->
+              <button type="submit" class="w-full gold-button py-3.5 px-4 rounded-xl text-stone-950 font-bold text-sm tracking-wide shadow-lg flex items-center justify-center space-x-2">
+                <span>Continue to Payment</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+
+            </form>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- 4. BOOKING CONFIRMATION VIEW -->
+    <div id="view-confirmation" class="page-view hidden py-16 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
+      
+      <div class="glass-panel-elevated p-8 sm:p-10 rounded-3xl border border-[#C5A880]/40 text-center relative overflow-hidden shadow-2xl">
+        
+        <!-- Confirmed Icon Header -->
+        <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-emerald-600 to-[#E5C378] p-0.5 mx-auto mb-6 shadow-xl shadow-emerald-950/40">
+          <div class="w-full h-full bg-[#0D0D0F] rounded-full flex items-center justify-center">
+            <i data-lucide="check" class="w-10 h-10 text-emerald-400"></i>
+          </div>
+        </div>
+
+        <span class="text-xs uppercase tracking-widest text-[#E5C378] font-bold block mb-1">Payment Verified On-Chain</span>
+        <h2 class="text-3xl sm:text-4xl font-serif-luxury font-bold text-stone-100 mb-2">
+          Reservation Confirmed
+        </h2>
+        <p class="text-sm text-stone-400 max-w-md mx-auto mb-6">
+          Your booking has been secured on the Ethereum Sepolia Testnet. Present your booking ID or QR pass upon arrival at the restaurant.
+        </p>
+
+        <!-- Live Status Lifecycle Progress Tracker -->
+        <div class="mb-6 p-4 rounded-2xl bg-stone-900/70 border border-[#C5A880]/25">
+          <div class="text-xs uppercase tracking-wider text-[#C5A880] font-semibold mb-3 text-left flex items-center justify-between">
+            <span class="flex items-center">
+              <i data-lucide="check-circle-2" class="w-4 h-4 mr-1.5 text-emerald-400"></i>
+              <span>ขั้นตอนและสถานะการจอง (Reservation Status & Progress)</span>
+            </span>
+            <span class="text-[11px] font-mono text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-500/40">100% Completed</span>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-left">
+            <div class="p-2.5 rounded-xl bg-stone-900/90 border border-emerald-500/30">
+              <div class="flex items-center text-emerald-400 text-xs font-semibold mb-0.5">
+                <i data-lucide="check" class="w-3.5 h-3.5 mr-1"></i> 1. สร้างรายการ
+              </div>
+              <span class="text-[10px] text-stone-400 block">Table Reserved</span>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-stone-900/90 border border-emerald-500/30">
+              <div class="flex items-center text-emerald-400 text-xs font-semibold mb-0.5">
+                <i data-lucide="check" class="w-3.5 h-3.5 mr-1"></i> 2. กระเป๋าเงิน
+              </div>
+              <span class="text-[10px] text-stone-400 block">MetaMask Linked</span>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-stone-900/90 border border-emerald-500/30">
+              <div class="flex items-center text-emerald-400 text-xs font-semibold mb-0.5">
+                <i data-lucide="check" class="w-3.5 h-3.5 mr-1"></i> 3. ชำระบล็อกเชน
+              </div>
+              <span class="text-[10px] text-stone-400 block">On-Chain Verified</span>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-emerald-950/50 border border-emerald-500/70 shadow-lg shadow-emerald-950/40">
+              <div class="flex items-center text-emerald-300 text-xs font-bold mb-0.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 mr-1.5 pulse-dot"></span> 4. ยืนยันสำเร็จ
+              </div>
+              <span class="text-[10px] text-emerald-300 font-semibold block">Confirmed</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Booking Details Card -->
+        <div class="p-6 rounded-2xl bg-stone-900/90 border border-stone-800 text-left space-y-4 mb-8">
+          
+          <div class="flex flex-col sm:flex-row justify-between sm:items-center pb-4 border-b border-stone-800 gap-3">
+            <div>
+              <span class="text-[10px] text-stone-500 uppercase tracking-wider block">Booking Reference ID</span>
+              <div class="flex items-center gap-2 mt-0.5">
+                <span id="confirm-booking-id" class="font-mono text-base font-bold text-[#E5C378]">TC-20261010-00125</span>
+                <button onclick="copyConfirmationBookingId()" class="text-stone-400 hover:text-white p-1 rounded hover:bg-stone-800">
+                  <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <!-- Booking Status Badge -->
+              <span id="confirm-booking-status-badge" class="text-xs font-bold px-3 py-1 rounded-full bg-emerald-950/80 text-emerald-300 border border-emerald-500/60 flex items-center shadow-md">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 pulse-dot"></span>
+                สถานะการจอง: <span id="confirm-booking-status-text" class="ml-1 text-emerald-200">Confirmed</span>
+              </span>
+
+              <!-- Payment Status Badge -->
+              <span class="text-xs font-semibold px-3 py-1 rounded-full bg-purple-950/60 text-purple-300 border border-purple-500/40 flex items-center">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5 mr-1 text-purple-400"></i>
+                <span id="confirm-payment-status-text">Blockchain Confirmed</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+            <div>
+              <span class="text-stone-500 block">Restaurant</span>
+              <span id="confirm-restaurant-name" class="font-medium text-stone-200 text-sm mt-0.5 block">Maison Grill</span>
+            </div>
+            <div>
+              <span class="text-stone-500 block">Date & Time</span>
+              <span class="font-medium text-stone-200 mt-0.5 block">
+                <span id="confirm-date">Oct 10, 2026</span> at <span id="confirm-time">19:00</span>
+              </span>
+            </div>
+            <div>
+              <span class="text-stone-500 block">Party Size</span>
+              <span id="confirm-guests" class="font-medium text-stone-200 mt-0.5 block">4 Guests</span>
+            </div>
+            <div>
+              <span class="text-stone-500 block">Booking Fee Paid</span>
+              <span id="confirm-fee" class="font-semibold text-amber-300 mt-0.5 block font-mono">0.002 ETH</span>
+            </div>
+
+            <div>
+              <span class="text-stone-500 block">สถานะการจอง (Booking Status)</span>
+              <span id="confirm-grid-booking-status" class="font-bold text-emerald-400 mt-0.5 block text-xs">
+                ● Confirmed (ยืนยันเรียบร้อย)
+              </span>
+            </div>
+            <div>
+              <span class="text-stone-500 block">สถานะการชำระเงิน (Payment)</span>
+              <span id="confirm-grid-payment-status" class="font-semibold text-purple-300 mt-0.5 block text-xs">
+                ● Blockchain Verified
+              </span>
+            </div>
+            <div>
+              <span class="text-stone-500 block">Customer Wallet</span>
+              <span id="confirm-wallet" class="font-mono text-stone-300 mt-0.5 block">0x71c4...a89F</span>
+            </div>
+            <div>
+              <span class="text-stone-500 block">Transaction Hash</span>
+              <div class="flex items-center gap-1.5 mt-0.5">
+                <span id="confirm-tx-hash" class="font-mono text-purple-300 text-xs">0x89f7...1e3b</span>
+                <button onclick="copyConfirmationTxHash()" class="text-stone-400 hover:text-white p-0.5">
+                  <i data-lucide="copy" class="w-3 h-3"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Digital Check-In Pass -->
+          <div class="pt-4 border-t border-stone-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-center sm:text-left">
+              <span class="text-xs font-semibold text-stone-200 block">Digital Arrival Pass</span>
+              <span class="text-[11px] text-stone-400">Scan at the host stand to verify table reservation</span>
+            </div>
+            <div id="confirm-qrcode" class="p-2 bg-stone-100 rounded-xl">
+              <!-- QRCode generated here -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <button onclick="navigateTo('my-bookings')" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold transition-colors">
+            View My Bookings
+          </button>
+          
+          <a id="confirm-etherscan-link" href="#" target="_blank" class="w-full sm:w-auto px-6 py-3 rounded-xl border border-purple-500/40 bg-purple-950/20 text-purple-300 hover:bg-purple-950/40 text-xs font-semibold transition-colors flex items-center justify-center">
+            <i data-lucide="external-link" class="w-4 h-4 mr-1.5"></i>
+            View Blockchain Transaction
+          </a>
+
+          <button onclick="navigateTo('restaurants')" class="w-full sm:w-auto gold-button px-6 py-3 rounded-xl text-stone-950 text-xs font-bold transition-all">
+            Back to Restaurants
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- 5. MY RESERVATIONS VIEW -->
+    <div id="view-my-bookings" class="page-view hidden py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+      
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-6 border-b border-stone-800">
+        <div>
+          <span class="text-xs uppercase tracking-widest text-[#C5A880] font-semibold block mb-1">Customer Dashboard</span>
+          <h2 class="text-3xl font-serif-luxury font-bold text-stone-100">My Reservations</h2>
+          <p class="text-xs text-stone-400 mt-1">Review your upcoming bookings and verified on-chain receipts.</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="flex space-x-6 mt-4 sm:mt-0 text-sm">
+          <button onclick="switchMyBookingsTab('upcoming')" class="booking-tab-btn pb-2 font-medium border-b-2 border-[#E5C378] text-[#E5C378]" data-tab="upcoming">
+            Upcoming
+          </button>
+          <button onclick="switchMyBookingsTab('completed')" class="booking-tab-btn pb-2 font-medium border-b-2 border-transparent text-stone-400 hover:text-stone-200" data-tab="completed">
+            Completed
+          </button>
+          <button onclick="switchMyBookingsTab('cancelled')" class="booking-tab-btn pb-2 font-medium border-b-2 border-transparent text-stone-400 hover:text-stone-200" data-tab="cancelled">
+            Cancelled
+          </button>
+        </div>
+      </div>
+
+      <!-- Reservations List -->
+      <div id="my-bookings-container" class="space-y-4">
+        <!-- Injected via JavaScript -->
+      </div>
+
+    </div>
+
+    <!-- 6. RESTAURANT ADMIN DASHBOARD VIEW -->
+    <div id="view-admin" class="page-view hidden py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      
+      <!-- Admin Header with Restaurant Selector -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 pb-6 border-b border-stone-800 gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs uppercase tracking-widest text-[#C5A880] font-semibold">Hospitality Portal</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-amber-950/60 text-amber-400 border border-amber-500/30">Owner Mode</span>
+          </div>
+          <h2 class="text-3xl font-serif-luxury font-bold text-stone-100 mt-1">
+            Restaurant Admin Dashboard
+          </h2>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <label class="text-xs text-stone-400">Manage Restaurant:</label>
+          <select id="admin-restaurant-select" class="px-3.5 py-2 rounded-xl bg-stone-900 border border-stone-700 text-stone-100 text-xs font-semibold focus:outline-none focus:border-[#C5A880]">
+            <!-- Injected via JS -->
+          </select>
+        </div>
+      </div>
+
+      <!-- KPI Metrics Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-10">
+        
+        <div class="glass-panel p-4 rounded-xl border border-stone-800">
+          <span class="text-[10px] uppercase tracking-wider text-stone-500 font-semibold block">Today's Bookings</span>
+          <div id="kpi-today-count" class="text-2xl font-serif font-bold text-stone-100 mt-1">0</div>
+          <span class="text-[10px] text-stone-400 mt-0.5 block">Scheduled today</span>
+        </div>
+
+        <div class="glass-panel p-4 rounded-xl border border-stone-800">
+          <span class="text-[10px] uppercase tracking-wider text-stone-500 font-semibold block">Confirmed</span>
+          <div id="kpi-confirmed-count" class="text-2xl font-serif font-bold text-emerald-400 mt-1">0</div>
+          <span class="text-[10px] text-emerald-500/80 mt-0.5 block">Paid on-chain</span>
+        </div>
+
+        <div class="glass-panel p-4 rounded-xl border border-stone-800">
+          <span class="text-[10px] uppercase tracking-wider text-stone-500 font-semibold block">Pending Payments</span>
+          <div id="kpi-pending-count" class="text-2xl font-serif font-bold text-amber-400 mt-1">0</div>
+          <span class="text-[10px] text-amber-500/80 mt-0.5 block">Awaiting tx</span>
+        </div>
+
+        <div class="glass-panel p-4 rounded-xl border border-stone-800">
+          <span class="text-[10px] uppercase tracking-wider text-stone-500 font-semibold block">Total Revenue</span>
+          <div id="kpi-revenue-eth" class="text-xl font-serif font-bold text-[#E5C378] mt-1 font-mono">0 ETH</div>
+          <span id="kpi-revenue-thb" class="text-[10px] text-stone-400 mt-0.5 block">≈ 0 THB</span>
+        </div>
+
+        <div class="glass-panel p-4 rounded-xl border border-stone-800 col-span-2 md:col-span-1">
+          <span class="text-[10px] uppercase tracking-wider text-stone-500 font-semibold block">Available Tables</span>
+          <div id="kpi-avail-tables" class="text-2xl font-serif font-bold text-stone-100 mt-1">0</div>
+          <span class="text-[10px] text-stone-400 mt-0.5 block">Ready for seating</span>
+        </div>
+
+      </div>
+
+      <!-- Reservations Management Table Section -->
+      <div class="glass-panel rounded-2xl border border-stone-800 overflow-hidden mb-12">
+        <div class="p-5 border-b border-stone-800 flex justify-between items-center">
+          <div>
+            <h3 class="text-lg font-serif font-bold text-stone-100">Live Reservations Management</h3>
+            <p class="text-xs text-stone-400">View incoming guests, track on-chain payment statuses, and manage check-ins.</p>
+          </div>
+          <button onclick="loadAdminData(state.admin.selectedRestaurantId)" class="text-xs text-stone-400 hover:text-white p-1.5 rounded bg-stone-900 border border-stone-800">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-stone-900/80 border-b border-stone-800 text-[10px] uppercase tracking-wider text-stone-400">
+                <th class="py-3 px-3">Booking ID</th>
+                <th class="py-3 px-3">Customer</th>
+                <th class="py-3 px-3">Wallet Address</th>
+                <th class="py-3 px-3">Guests</th>
+                <th class="py-3 px-3">Date</th>
+                <th class="py-3 px-3">Time</th>
+                <th class="py-3 px-3">Booking Fee</th>
+                <th class="py-3 px-3">Payment</th>
+                <th class="py-3 px-3">Booking Status</th>
+                <th class="py-3 px-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-reservations-tbody">
+              <!-- Injected via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Table Management Section -->
+      <div class="glass-panel rounded-2xl border border-stone-800 p-6">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-6 gap-3">
+          <div>
+            <h3 class="text-lg font-serif font-bold text-stone-100">Table Configuration & Live Status</h3>
+            <p class="text-xs text-stone-400">Prevents double booking by enforcing capacity and reserving tables upon payment.</p>
+          </div>
+          <button onclick="openAddTableModal()" class="gold-button px-4 py-2 rounded-xl text-stone-950 text-xs font-bold flex items-center">
+            <i data-lucide="plus" class="w-3.5 h-3.5 mr-1.5"></i>
+            Add New Table
+          </button>
+        </div>
+
+        <div id="admin-tables-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 7. SMART CONTRACT & BLOCKCHAIN EVENTS VIEW -->
+    <div id="view-smart-contract" class="page-view hidden py-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto space-y-10">
+      
+      <div>
+        <span class="text-xs uppercase tracking-widest text-[#C5A880] font-semibold block mb-1">Architecture</span>
+        <h2 class="text-3xl font-serif-luxury font-bold text-stone-100">
+          Smart Contract Concept & On-Chain Proof
+        </h2>
+        <p class="text-xs text-stone-400 mt-1">
+          Decentralized booking payment validation deployed on Ethereum Sepolia Testnet using Solidity and ethers.js.
+        </p>
+      </div>
+
+      <!-- Contract Info Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        
+        <div class="glass-panel p-4 rounded-xl border border-stone-800">
+          <span class="text-[10px] text-stone-500 uppercase tracking-wider block">Contract Name</span>
+          <span class="text-sm font-bold text-stone-200 font-mono block mt-1">TableChainBooking.sol</span>
+          <span class="text-[11px] text-emerald-400 mt-1 block">Solidity ^0.8.20</span>
+        </div>
+
+        <div class="glass-panel p-4 rounded-xl border border-stone-800">
+          <span class="text-[10px] text-stone-500 uppercase tracking-wider block">Sepolia Deployment</span>
+          <span class="text-xs font-mono text-purple-300 block mt-1">0x8a9947816C68564016b3fE9392e6d5bA8a45e997</span>
+          <span class="text-[11px] text-stone-400 mt-1 block">Chain ID: 11155111</span>
+        </div>
+
+        <div class="glass-panel p-4 rounded-xl border border-stone-800">
+          <span class="text-[10px] text-stone-500 uppercase tracking-wider block">Key Conceptual Function</span>
+          <span class="text-xs font-mono text-amber-300 block mt-1">payBookingFee(string bookingId)</span>
+          <span class="text-[11px] text-stone-400 mt-1 block">Emits: BookingPaid event</span>
+        </div>
+
+      </div>
+
+      <!-- Live Blockchain Events Feed -->
+      <div class="glass-panel p-6 rounded-2xl border border-stone-800">
+        <div class="flex justify-between items-center mb-4">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-purple-400 pulse-dot"></span>
+            <h3 class="text-base font-serif font-bold text-stone-100">Live On-Chain Event Feed (Sepolia Testnet)</h3>
+          </div>
+          <span class="text-xs text-stone-500">Real-time emits</span>
+        </div>
+
+        <div id="blockchain-events-container" class="space-y-3">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+
+      <!-- Solidity Code Snippet Display -->
+      <div class="glass-panel p-6 rounded-2xl border border-stone-800">
+        <h3 class="text-base font-serif font-bold text-stone-100 mb-2">Solidity Source Code Preview</h3>
+        <p class="text-xs text-stone-400 mb-4">Located at <code class="text-amber-300 bg-stone-900 px-1 py-0.5 rounded">contracts/TableChainBooking.sol</code></p>
+        
+        <pre class="bg-stone-950 p-4 rounded-xl border border-stone-800/80 text-[11px] text-stone-300 font-mono overflow-x-auto leading-relaxed max-h-96">
+<code>// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract TableChainBooking {
+    struct Booking {
+        string bookingId;
+        address customer;
+        address payable restaurantWallet;
+        uint256 amount;
+        uint256 timestamp;
+        PaymentStatus status;
+        bool exists;
+    }
+
+    event BookingPaid(
+        string indexed bookingIdIndexed,
+        string bookingId,
+        address indexed customerWallet,
+        address indexed restaurantWallet,
+        uint256 amount,
+        uint256 timestamp
+    );
+
+    function payBookingFee(
+        string calldata bookingId,
+        address payable restaurantWallet
+    ) external payable {
+        require(msg.value > 0, "Booking fee must be > 0");
+        require(!bookings[bookingId].exists, "Booking already paid");
+
+        bookings[bookingId] = Booking({
+            bookingId: bookingId,
+            customer: msg.sender,
+            restaurantWallet: restaurantWallet,
+            amount: msg.value,
+            timestamp: block.timestamp,
+            status: PaymentStatus.Paid,
+            exists: true
+        });
+
+        emit BookingPaid(bookingId, bookingId, msg.sender, restaurantWallet, msg.value, block.timestamp);
+    }
+}</code>
+        </pre>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- 1. CHECKOUT & BLOCKCHAIN PAYMENT MODAL -->
+  <div id="checkout-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="glass-panel-elevated w-full max-w-lg rounded-3xl p-6 sm:p-8 border border-[#C5A880]/30 shadow-2xl relative animate-in fade-in">
+      
+      <!-- Close Button -->
+      <button onclick="closeModal('checkout-modal')" class="absolute top-5 right-5 text-stone-400 hover:text-white p-1 rounded-full hover:bg-stone-800">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <span class="text-xs uppercase tracking-widest text-[#C5A880] font-bold block mb-1">Final Step</span>
+      <h3 class="text-2xl font-serif font-bold text-stone-100 mb-6">Complete Reservation</h3>
+
+      <!-- Reservation Summary Section -->
+      <div class="p-4 rounded-xl bg-stone-900 border border-stone-800 space-y-2 text-xs mb-6">
+        <span class="text-[10px] text-stone-500 uppercase tracking-wider block font-semibold">Reservation Summary</span>
+        
+        <div class="flex justify-between text-stone-300">
+          <span>Restaurant:</span>
+          <span id="checkout-restaurant-name" class="font-bold text-stone-100">Maison Grill</span>
+        </div>
+        <div class="flex justify-between text-stone-300">
+          <span>Date:</span>
+          <span id="checkout-date" class="font-medium text-stone-100">October 10, 2026</span>
+        </div>
+        <div class="flex justify-between text-stone-300">
+          <span>Time:</span>
+          <span id="checkout-time" class="font-medium text-stone-100">19:00</span>
+        </div>
+        <div class="flex justify-between text-stone-300">
+          <span>Guests:</span>
+          <span id="checkout-guests" class="font-medium text-stone-100">4</span>
+        </div>
+        <div class="flex justify-between text-stone-300 pt-2 border-t border-stone-800">
+          <span>Booking Fee:</span>
+          <div class="text-right">
+            <span id="checkout-fee-eth" class="font-bold text-[#E5C378] font-mono text-sm block">0.002 ETH</span>
+            <span id="checkout-fee-thb" class="text-[10px] text-stone-500 block">≈ 250 THB</span>
+          </div>
+        </div>
+        <div class="flex justify-between items-center text-stone-300 pt-2 border-t border-stone-800/80">
+          <span class="font-medium text-stone-300 flex items-center">
+            <i data-lucide="info" class="w-3.5 h-3.5 mr-1 text-[#C5A880]"></i>
+            สถานะการจอง (Booking Status):
+          </span>
+          <span id="checkout-booking-status" class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-950/60 text-amber-400 border border-amber-500/40 flex items-center">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-400 mr-1.5 pulse-dot"></span>
+            <span id="checkout-booking-status-text">Pending Payment</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Blockchain Payment Section -->
+      <div class="space-y-4 mb-6">
+        <span class="text-xs font-semibold text-stone-200 block">Blockchain Payment</span>
+        
+        <div class="grid grid-cols-2 gap-3 text-xs">
+          <div class="p-3 rounded-lg bg-stone-900/60 border border-stone-800">
+            <span class="text-[10px] text-stone-500 block">Network</span>
+            <span id="checkout-network" class="font-medium text-purple-300 mt-0.5 block">Ethereum / Sepolia</span>
+          </div>
+          <div class="p-3 rounded-lg bg-stone-900/60 border border-stone-800">
+            <span class="text-[10px] text-stone-500 block">Restaurant Wallet</span>
+            <span id="checkout-restaurant-wallet" class="font-mono text-stone-300 mt-0.5 block">0x91F5...9E41</span>
+          </div>
+        </div>
+
+        <!-- Wallet connection status in checkout -->
+        <div id="checkout-wallet-status">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+
+      <!-- Loading State Progression Box -->
+      <div id="payment-progress-box" class="hidden p-5 rounded-2xl bg-purple-950/20 border border-purple-500/30 text-center space-y-3 mb-4">
+        <div class="flex items-center justify-center">
+          <svg class="animate-spin h-7 w-7 text-[#E5C378]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+          </svg>
+        </div>
+        <div id="payment-step-text" class="text-sm font-semibold text-stone-100">
+          Waiting for MetaMask Confirmation...
+        </div>
+        <div id="payment-step-sub" class="text-xs text-stone-400">
+          Please confirm the transaction prompt in your wallet.
+        </div>
+      </div>
+
+      <!-- Error Box -->
+      <div id="payment-error-box" class="hidden p-4 rounded-xl bg-rose-950/30 border border-rose-500/40 text-left mb-4">
+        <div class="flex items-start gap-2.5">
+          <i data-lucide="alert-octagon" class="w-4 h-4 text-rose-400 flex-shrink-0 mt-0.5"></i>
+          <div>
+            <span class="text-xs font-semibold text-rose-300 block">Payment Error</span>
+            <p id="payment-error-message" class="text-xs text-rose-200/80 mt-0.5"></p>
+          </div>
+        </div>
+        <div class="mt-3 flex gap-2">
+          <button onclick="executeBlockchainPayment()" class="px-3 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-200 text-xs font-semibold">
+            Retry Payment
+          </button>
+          <button onclick="switchAndPayWithDemo()" class="px-3 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-300 text-xs font-semibold">
+            Complete with Demo Wallet
+          </button>
+        </div>
+      </div>
+
+      <!-- Pay Button -->
+      <button id="pay-booking-fee-btn" onclick="executeBlockchainPayment()" class="w-full gold-button py-3.5 px-4 rounded-xl text-stone-950 text-sm font-bold flex items-center justify-center space-x-2 shadow-lg">
+        <i data-lucide="zap" class="w-4 h-4 fill-stone-950"></i>
+        <span>Pay Booking Fee with MetaMask</span>
+      </button>
+
+      <p class="text-[10px] text-center text-stone-500 mt-3">
+        Zero real money required &bull; Testnet transaction guarantees your table
+      </p>
+
+    </div>
+  </div>
+
+  <!-- 2. METAMASK NOT INSTALLED MODAL -->
+  <div id="metamask-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="glass-panel-elevated w-full max-w-md rounded-3xl p-6 sm:p-8 border border-amber-500/30 text-center shadow-2xl relative animate-in fade-in">
+      <button onclick="closeModal('metamask-modal')" class="absolute top-4 right-4 text-stone-400 hover:text-white p-1">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="w-16 h-16 rounded-full bg-amber-950/60 border border-amber-500/40 flex items-center justify-center mx-auto mb-4 text-amber-400">
+        <i data-lucide="wallet" class="w-8 h-8"></i>
+      </div>
+
+      <h3 class="text-xl font-serif font-bold text-stone-100 mb-2">MetaMask Required</h3>
+      <p class="text-xs text-stone-400 mb-6">
+        MetaMask is required to complete blockchain payments on TableChain. You can install MetaMask for your browser or continue with our built-in Sepolia Demo Wallet.
+      </p>
+
+      <div class="space-y-3">
+        <a href="https://metamask.io/download/" target="_blank" class="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-stone-950 text-xs font-bold transition-colors flex items-center justify-center">
+          <i data-lucide="download" class="w-4 h-4 mr-2"></i>
+          Install MetaMask
+        </a>
+        <button onclick="connectDemoWallet()" class="w-full py-3 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold transition-colors flex items-center justify-center">
+          <i data-lucide="play" class="w-4 h-4 mr-2 text-purple-400"></i>
+          Simulate with Sepolia Testnet Demo Wallet
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. BOOKING DETAIL INSPECTION MODAL -->
+  <div id="booking-detail-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="glass-panel-elevated w-full max-w-lg rounded-3xl p-6 sm:p-8 border border-[#C5A880]/30 shadow-2xl relative animate-in fade-in">
+      <button onclick="closeModal('booking-detail-modal')" class="absolute top-5 right-5 text-stone-400 hover:text-white p-1">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-2 mb-1">
+        <span class="text-xs uppercase tracking-wider text-stone-400 font-semibold">Reservation Detail</span>
+        <span id="modal-booking-status" class="text-xs px-2.5 py-0.5 rounded-full font-medium">Confirmed</span>
+      </div>
+      <h3 id="modal-restaurant-name" class="text-2xl font-serif font-bold text-stone-100 mb-6">Maison Grill</h3>
+
+      <div class="space-y-3 text-xs bg-stone-900 p-4 rounded-xl border border-stone-800 mb-6">
+        <div class="flex justify-between text-stone-300">
+          <span>Booking ID:</span>
+          <span id="modal-booking-id" class="font-mono text-[#E5C378] font-bold">TC-20261010-00125</span>
+        </div>
+        <div class="flex justify-between text-stone-300">
+          <span>Date & Time:</span>
+          <span id="modal-date-time" class="text-stone-100 font-medium">2026-10-10 at 19:00</span>
+        </div>
+        <div class="flex justify-between text-stone-300">
+          <span>Guests & Table:</span>
+          <span id="modal-guests" class="text-stone-100 font-medium">4 Guests (Table T03)</span>
+        </div>
+        <div class="flex justify-between text-stone-300">
+          <span>Booking Fee:</span>
+          <span id="modal-fee" class="text-amber-300 font-mono font-semibold">0.002 ETH</span>
+        </div>
+        <div class="flex justify-between text-stone-300">
+          <span>Customer Wallet:</span>
+          <span id="modal-wallet" class="font-mono text-stone-400">0x71C4...A89F</span>
+        </div>
+        <div class="flex justify-between text-stone-300">
+          <span>Transaction Hash:</span>
+          <span id="modal-tx-hash" class="font-mono text-purple-300">0x89f7...1e3b</span>
+        </div>
+      </div>
+
+      <!-- QR Code -->
+      <div class="flex items-center justify-between p-4 bg-stone-900/60 rounded-xl border border-stone-800 mb-6">
+        <div>
+          <span class="text-xs font-semibold text-stone-200 block">Host Stand Check-In Pass</span>
+          <span class="text-[10px] text-stone-400">Show this QR upon arrival</span>
+        </div>
+        <div id="modal-qrcode" class="p-1.5 bg-stone-100 rounded-lg"></div>
+      </div>
+
+      <div class="flex items-center justify-between gap-3">
+        <a id="modal-etherscan-link" href="#" target="_blank" class="px-4 py-2.5 rounded-xl border border-purple-500/40 text-purple-300 hover:bg-purple-950/30 text-xs font-medium flex items-center">
+          <i data-lucide="external-link" class="w-3.5 h-3.5 mr-1.5"></i> Sepolia Etherscan
+        </a>
+
+        <button id="modal-cancel-booking-btn" class="px-4 py-2.5 rounded-xl border border-rose-500/40 text-rose-300 hover:bg-rose-950/30 text-xs font-medium">
+          Cancel Reservation
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 4. ADD NEW TABLE MODAL (Admin) -->
+  <div id="add-table-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="glass-panel-elevated w-full max-w-sm rounded-3xl p-6 border border-stone-800 shadow-2xl relative animate-in fade-in">
+      <button onclick="closeModal('add-table-modal')" class="absolute top-4 right-4 text-stone-400 hover:text-white p-1">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <h3 class="text-xl font-serif font-bold text-stone-100 mb-4">Add Table</h3>
+      
+      <form onsubmit="handleAddNewTable(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="block text-stone-300 mb-1">Table Number</label>
+          <input type="text" id="new-table-number" placeholder="e.g. Table T06 or VIP Suite 02" required
+                 class="w-full px-3 py-2 rounded-lg bg-stone-900 border border-stone-800 text-stone-200 text-xs focus:outline-none focus:border-[#C5A880]" />
+        </div>
+        <div>
+          <label class="block text-stone-300 mb-1">Capacity (Guests)</label>
+          <input type="number" id="new-table-capacity" min="1" max="20" value="4" required
+                 class="w-full px-3 py-2 rounded-lg bg-stone-900 border border-stone-800 text-stone-200 text-xs focus:outline-none focus:border-[#C5A880]" />
+        </div>
+        <div>
+          <label class="block text-stone-300 mb-1">Initial Status</label>
+          <select id="new-table-status" class="w-full px-3 py-2 rounded-lg bg-stone-900 border border-stone-800 text-stone-200 text-xs">
+            <option value="Available">Available</option>
+            <option value="Reserved">Reserved</option>
+            <option value="Occupied">Occupied</option>
+            <option value="Cleaning">Cleaning</option>
+            <option value="Unavailable">Unavailable</option>
+          </select>
+        </div>
+
+        <button type="submit" class="w-full gold-button py-2.5 rounded-lg text-stone-950 font-bold text-xs">
+          Create Table
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= TOAST NOTIFICATION CONTAINER ================= -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="border-t border-[#C5A880]/15 bg-[#0D0D0F] py-12 px-4 sm:px-6 lg:px-8 mt-20 text-xs text-stone-500">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center space-x-3">
+        <div class="w-7 h-7 rounded-lg bg-[#E5C378] flex items-center justify-center text-stone-950 font-cinzel font-bold text-xs">
+          TC
+        </div>
+        <span class="font-cinzel text-stone-300 font-bold tracking-wider">TABLECHAIN</span>
+        <span class="text-stone-600">&bull;</span>
+        <span>Decentralized Fine Dining Reservation Platform</span>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-6">
+        <a href="#view-home" onclick="navigateTo('home')" class="hover:text-stone-300 transition-colors">Home</a>
+        <a href="#view-restaurants" onclick="navigateTo('restaurants')" class="hover:text-stone-300 transition-colors">Restaurants</a>
+        <a href="#view-my-bookings" onclick="navigateTo('my-bookings')" class="hover:text-stone-300 transition-colors">My Reservations</a>
+        <a href="#view-admin" onclick="navigateTo('admin')" class="hover:text-stone-300 transition-colors">Restaurant Admin</a>
+        <a href="#view-smart-contract" onclick="navigateTo('smart-contract')" class="hover:text-stone-300 transition-colors">Smart Contract</a>
+      </div>
+
+      <div class="text-stone-500 text-[11px]">
+        Ethereum Sepolia Testnet &bull; Prototype Edition
+      </div>
+    </div>
+  </footer>
+
+  <!-- TableChain Application Core JS -->
+  <script>
+/**
+ * TableChain Application Core
+ * Full-stack Restaurant Table Booking with MetaMask Web3 Integration
+ * Supports both Live Python REST API and client-side fallback persistence.
+ */
+
+// Configuration & Constants
+const SEPOLIA_CHAIN_ID_HEX = "0xaa36a7"; // 11155111
+const SEPOLIA_CHAIN_ID_DEC = 11155111;
+const PLATFORM_CONTRACT_ADDRESS = "0x8a9947816C68564016b3Fe9392E6d5bA8a45E997";
+const ETH_TO_THB_RATE = 125000;
+
+// Safe address checksum helper to guarantee 100% compliance with EIP-55
+function safeChecksumAddress(addr) {
+  if (!addr) return "0x0000000000000000000000000000000000000000";
+  try {
+    if (typeof ethers !== "undefined" && ethers.getAddress) {
+      return ethers.getAddress(addr.toLowerCase());
+    }
+  } catch (err) {
+    console.warn("safeChecksumAddress warning:", err);
+  }
+  return addr;
+}
+
+// Default Seed Data (used as fallback if backend is offline or opened via file://)
+const SEED_RESTAURANTS = [
+  {
+    id: 1,
+    name: "Maison Grill",
+    description: "An intimate and distinguished steakhouse nestled in Chiang Mai's historic quarter. Specializing in dry-aged Wagyu, charcoal fire gastronomy, and an award-winning cellar of Old World vintages. Experience unmatched culinary precision in an elegant dark timber atmosphere.",
+    location: "Chiang Mai, Old City",
+    cuisine: "Steakhouse & Grill",
+    rating: 4.8,
+    average_price: "800 THB/person",
+    booking_fee: 0.002,
+    wallet_address: "0x91F5B46271Ce26dB8d3F6b429a6beB671a5c9e41",
+    image_url: "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=800&auto=format&fit=crop"
+    ],
+    opening_hours: "17:00 - 23:00 (Tue - Sun)",
+    facilities: ["Valet Parking", "Dry-Aging Room Display", "Sommelier Service", "Private Dining Salon", "Outdoor Terrace", "Cocktail Lounge"],
+    menu: [
+      { name: "45-Day Dry-Aged Australian Tomahawk", price: "3,400 THB", desc: "Charcoal grilled over lychee wood, smoked bone marrow butter" },
+      { name: "A5 Miyazaki Wagyu Ribeye (250g)", price: "2,850 THB", desc: "Truffle potato mousseline, red wine reduction, fleur de sel" },
+      { name: "Hokkaido Scallop Carpaccio", price: "680 THB", desc: "Finger lime, oscietra caviar, white truffle oil" },
+      { name: "Smoked Dark Chocolate Fondant", price: "420 THB", desc: "Madagascan vanilla bean gelato, smoked sea salt caramel" }
+    ],
+    cancellation_policy: "Full refund of booking fee if cancelled at least 4 hours before reservation time. No refund for no-shows or cancellations within 4 hours.",
+    tables: [
+      { id: 1, restaurant_id: 1, table_number: "Table T01", capacity: 2, status: "Available" },
+      { id: 2, restaurant_id: 1, table_number: "Table T02", capacity: 4, status: "Available" },
+      { id: 3, restaurant_id: 1, table_number: "Table T03", capacity: 4, status: "Reserved" },
+      { id: 4, restaurant_id: 1, table_number: "Table T04", capacity: 6, status: "Available" },
+      { id: 5, restaurant_id: 1, table_number: "Table T05", capacity: 2, status: "Occupied" },
+      { id: 6, restaurant_id: 1, table_number: "VIP Suite 01", capacity: 8, status: "Available" }
+    ]
+  },
+  {
+    id: 2,
+    name: "Nara Dining",
+    description: "Contemporary Northern Thai haute cuisine reimagined with modern culinary craftsmanship. Nara Dining sources hyper-seasonal botanicals and heirloom ingredients directly from Royal Project farms in the Chiang Mai highlands.",
+    location: "Chiang Mai, Nimman",
+    cuisine: "Thai Contemporary",
+    rating: 4.7,
+    average_price: "600 THB/person",
+    booking_fee: 0.0015,
+    wallet_address: "0x52E824F18c0C460D7b0D92Fa71302A0Fa09d6637",
+    image_url: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1200&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1552566626-52f8b828add9?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1508424757105-b6d5ad9329d0?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=800&auto=format&fit=crop"
+    ],
+    opening_hours: "17:30 - 22:30 (Daily)",
+    facilities: ["Garden Pavilion", "Organic Highland Ingredients", "Tea Pairing Experience", "Cocktail Bar", "Valet Parking", "Vegan Options"],
+    menu: [
+      { name: "Khao Soi Deconstructed Tortellini", price: "520 THB", desc: "Crispy noodles, braised wagyu cheek, coconut-curry emulsion" },
+      { name: "Northern Herbs Cured Salmon Tartare", price: "480 THB", desc: "Wild makwaen pepper, betel leaf crisps, kalamansi gel" },
+      { name: "Smoked Duck Breast Gaeng Hang Lay", price: "650 THB", desc: "Ginger confit, pickled garlic pearls, jasmine rice blossom" },
+      { name: "Smoked Coconut & Mango Parfait", price: "350 THB", desc: "Pandan crisp, toasted mung beans, coconut cream granite" }
+    ],
+    cancellation_policy: "Free cancellation up to 6 hours before dining time. Booking fee is securely returned via smart contract verification.",
+    tables: [
+      { id: 7, restaurant_id: 2, table_number: "Table T01", capacity: 2, status: "Available" },
+      { id: 8, restaurant_id: 2, table_number: "Table T02", capacity: 4, status: "Available" },
+      { id: 9, restaurant_id: 2, table_number: "Table T03", capacity: 4, status: "Available" },
+      { id: 10, restaurant_id: 2, table_number: "Table T04", capacity: 6, status: "Reserved" },
+      { id: 11, restaurant_id: 2, table_number: "Garden Pavilion", capacity: 6, status: "Available" }
+    ]
+  },
+  {
+    id: 3,
+    name: "Sakura House",
+    description: "Traditional Kaiseki and Edomae Sushi atelier featuring seafood flown in thrice weekly from Toyosu Market, Tokyo. Immerse yourself in authentic Japanese omotenashi hospitality with bespoke Hinoki wood counter dining.",
+    location: "Chiang Mai, Riverside",
+    cuisine: "Japanese Kaiseki & Sushi",
+    rating: 4.9,
+    average_price: "1,000 THB/person",
+    booking_fee: 0.0025,
+    wallet_address: "0x3B887C6C23d3FdA9eA3B3F13a3c7A8b699d8b92E",
+    image_url: "https://images.unsplash.com/photo-1579027989536-b7b1f875659b?q=80&w=1200&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1579027989536-b7b1f875659b?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1611143669185-af224c5e3252?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1563245372-f21724e3856d?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?q=80&w=800&auto=format&fit=crop"
+    ],
+    opening_hours: "18:00 - 22:30 (Wed - Mon)",
+    facilities: ["Sushi Hinoki Counter", "Sake Sommelier", "Private Tatami Rooms", "Riverside Courtyard", "Live Tea Ceremony"],
+    menu: [
+      { name: "Edomae Nigiri Omakase (10 pcs)", price: "2,800 THB", desc: "Otoro, Uni, Akami, Shima Aji, Botan Ebi, Binchotan charred" },
+      { name: "A5 Wagyu & Foie Gras Sukiyaki", price: "1,600 THB", desc: "Onsen quail egg, maitake mushrooms, sweet dashi broth" },
+      { name: "Tsubugai Clam & Awabi Tempura", price: "890 THB", desc: "Matcha sea salt, grated daikon, tentsuyu dipping sauce" },
+      { name: "Uji Matcha Ceremonial Mousse", price: "390 THB", desc: "Yuzu jelly, azuki red bean compote, 24k gold leaf" }
+    ],
+    cancellation_policy: "Booking fee applies toward your dining bill. Cancellations accepted up to 12 hours prior to scheduled seating.",
+    tables: [
+      { id: 12, restaurant_id: 3, table_number: "Counter C01", capacity: 2, status: "Available" },
+      { id: 13, restaurant_id: 3, table_number: "Counter C02", capacity: 2, status: "Occupied" },
+      { id: 14, restaurant_id: 3, table_number: "Table T01", capacity: 4, status: "Available" },
+      { id: 15, restaurant_id: 3, table_number: "Tatami Room 01", capacity: 6, status: "Available" },
+      { id: 16, restaurant_id: 3, table_number: "Tatami Room 02", capacity: 6, status: "Reserved" }
+    ]
+  },
+  {
+    id: 4,
+    name: "L'Atelier Gourmet",
+    description: "Contemporary French haute cuisine set in a sunlit colonial conservatory along the Ping River. Chef-driven seasonal tasting menus celebrating French classical technique with locally harvested tropical flora.",
+    location: "Chiang Mai, Wat Ket",
+    cuisine: "French Contemporary",
+    rating: 4.8,
+    average_price: "1,200 THB/person",
+    booking_fee: 0.003,
+    wallet_address: "0x7890Aa1b2C3d4E5f6a7b8C9D0E1F2a3b4C5d6E7f",
+    image_url: "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?q=80&w=1200&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800&auto=format&fit=crop"
+    ],
+    opening_hours: "18:00 - 23:00 (Tue - Sun)",
+    facilities: ["Bordeaux Wine Cellar", "Chef Counter", "Riverfront Garden", "Valet Service", "Live Acoustic Piano"],
+    menu: [
+      { name: "Pan-Seared Brittany Sea Bass", price: "1,450 THB", desc: "Beurre blanc, fennel confit, Kristal caviar" },
+      { name: "Roasted Pigeon with Truffle Jus", price: "1,650 THB", desc: "Jerusalem artichoke puree, caramelized shallots" },
+      { name: "Artisanal French Fromage Platter", price: "750 THB", desc: "Selection of 5 AOC cheeses, honeycomb, sourdough crisps" }
+    ],
+    cancellation_policy: "Guaranteed table placement upon on-chain booking fee receipt. Free cancellation up to 6 hours before.",
+    tables: [
+      { id: 17, restaurant_id: 4, table_number: "Table T01", capacity: 2, status: "Available" },
+      { id: 18, restaurant_id: 4, table_number: "Table T02", capacity: 4, status: "Available" },
+      { id: 19, restaurant_id: 4, table_number: "Riverview VIP", capacity: 6, status: "Available" }
+    ]
+  }
+];
+
+const SEED_RESERVATIONS = [
+  {
+    id: 1,
+    booking_id: "TC-20261010-00125",
+    restaurant_id: 1,
+    restaurant_name: "Maison Grill",
+    restaurant_location: "Chiang Mai, Old City",
+    restaurant_cuisine: "Steakhouse & Grill",
+    restaurant_image: "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=800&auto=format&fit=crop",
+    table_id: 3,
+    table_number: "Table T03",
+    customer_name: "Alex Mercer",
+    customer_email: "alex.mercer@gmail.com",
+    customer_phone: "+66 81 234 5678",
+    reservation_date: new Date().toISOString().split("T")[0],
+    reservation_time: "19:00",
+    guest_count: 4,
+    booking_fee: 0.002,
+    wallet_address: "0x71c4cFf2B9D6f8C380482B768b1812aA9c27a89F",
+    transaction_hash: "0x89f7c32e92cbb4356ef24a1879ec19ef6d78ef86483562bb608ffb08bb901e3b",
+    payment_status: "Confirmed",
+    booking_status: "Confirmed",
+    special_requests: "Anniversary celebration. Quiet table requested.",
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 2,
+    booking_id: "TC-20261011-00142",
+    restaurant_id: 2,
+    restaurant_name: "Nara Dining",
+    restaurant_location: "Chiang Mai, Nimman",
+    restaurant_cuisine: "Thai Contemporary",
+    restaurant_image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800&auto=format&fit=crop",
+    table_id: 10,
+    table_number: "Table T04",
+    customer_name: "Sarah Jenkins",
+    customer_email: "s.jenkins@web3ventures.io",
+    customer_phone: "+66 89 876 5432",
+    reservation_date: new Date(Date.now() + 86400000).toISOString().split("T")[0],
+    reservation_time: "18:30",
+    guest_count: 6,
+    booking_fee: 0.0015,
+    wallet_address: "0x9965507D1a55bcC2695c58bA16Fb37d819b0a4df",
+    transaction_hash: "0x42f88a9c80d461715fbc705a61a498b2ef82b681816f08e49d63259a4192b0c1",
+    payment_status: "Confirmed",
+    booking_status: "Confirmed",
+    special_requests: "Vegan options for two guests.",
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 3,
+    booking_id: "TC-20261009-00098",
+    restaurant_id: 3,
+    restaurant_name: "Sakura House",
+    restaurant_location: "Chiang Mai, Riverside",
+    restaurant_cuisine: "Japanese Kaiseki & Sushi",
+    restaurant_image: "https://images.unsplash.com/photo-1579027989536-b7b1f875659b?q=80&w=800&auto=format&fit=crop",
+    table_id: 16,
+    table_number: "Tatami Room 02",
+    customer_name: "Nattawut Somchai",
+    customer_email: "nattawut.s@techinnovate.th",
+    customer_phone: "+66 82 555 1212",
+    reservation_date: new Date(Date.now() - 86400000).toISOString().split("T")[0],
+    reservation_time: "19:30",
+    guest_count: 4,
+    booking_fee: 0.0025,
+    wallet_address: "0x3C44CDDdB6A900fa2B585dD299e03D12Fa4293Bc",
+    transaction_hash: "0x15b76c8c4a169828456209ef78da9142ec0176884638a2e1d71953267926b482",
+    payment_status: "Confirmed",
+    booking_status: "Completed",
+    special_requests: "Chef recommendation omakase.",
+    created_at: new Date(Date.now() - 86400000).toISOString()
+  }
+];
+
+// LocalStore persistence fallback
+class LocalStore {
+  static get(key, defaultVal) {
+    try {
+      const data = localStorage.getItem(`tablechain_${key}`);
+      return data ? JSON.parse(data) : defaultVal;
+    } catch {
+      return defaultVal;
+    }
+  }
+
+  static set(key, val) {
+    try {
+      localStorage.setItem(`tablechain_${key}`, JSON.stringify(val));
+    } catch {}
+  }
+
+  static reset() {
+    try {
+      localStorage.removeItem("tablechain_restaurants");
+      localStorage.removeItem("tablechain_reservations");
+    } catch {}
+  }
+}
+
+// Application State
+const state = {
+  view: "home", // home, restaurants, restaurant-detail, checkout, confirmation, my-bookings, admin, smart-contract
+  restaurants: [],
+  selectedRestaurant: null,
+  activeFilterCuisine: "All",
+  searchQuery: "",
+  
+  // Wallet State
+  wallet: {
+    address: null,
+    shortAddress: null,
+    isConnected: false,
+    chainId: null,
+    isSepolia: false,
+    isDemoSimulated: false,
+    balance: "1.45 ETH"
+  },
+
+  // Active Booking Draft
+  bookingDraft: {
+    restaurantId: null,
+    tableId: null,
+    tableName: null,
+    date: new Date().toISOString().split("T")[0],
+    time: "19:00",
+    guestCount: 2,
+    customerName: "",
+    customerEmail: "",
+    customerPhone: "",
+    specialRequests: "",
+    bookingFee: 0.002
+  },
+
+  // Current Confirmed Booking (for confirmation screen)
+  lastConfirmedBooking: null,
+
+  // Admin State
+  admin: {
+    selectedRestaurantId: 1,
+    stats: {},
+    reservations: [],
+    tables: []
+  },
+
+  // Blockchain Events Feed
+  blockchainEvents: [
+    {
+      txHash: "0x89f7c32e92cbb4356ef24a1879ec19ef6d78ef86483562bb608ffb08bb901e3b",
+      bookingId: "TC-20261010-00125",
+      customer: "0x71C4cfF2B9D6F8C380482B768B1812aA9c27A89F",
+      restaurant: "0x91F5B46271cE26Db8d3f6B429A6bEb671a5c9E41",
+      amount: "0.002 ETH",
+      time: "25 mins ago",
+      type: "BookingPaid"
+    },
+    {
+      txHash: "0x42f88a9c80d461715fbc705a61a498b2ef82b681816f08e49d63259a4192b0c1",
+      bookingId: "TC-20261011-00142",
+      customer: "0x9965507D1a55bcC2695C58ba16FB37d819B0A4df",
+      restaurant: "0x52E824F18c0c460D7b0D92fA71302A0fA09d6637",
+      amount: "0.0015 ETH",
+      time: "1 hour ago",
+      type: "BookingPaid"
+    }
+  ]
+};
+
+// ================= SMART RESILIENT API CLIENT ================= //
+
+async function apiRequest(endpoint, method = "GET", body = null) {
+  // Try network fetch to server first
+  try {
+    const options = { method, headers: { "Content-Type": "application/json" } };
+    if (body) options.body = JSON.stringify(body);
+    const res = await fetch(endpoint, options);
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (netErr) {
+    // Backend offline or file:// protocol - gracefully fall back to local client store!
+  }
+
+  // Fallback simulator for offline/file:// protocol
+  return handleOfflineApi(endpoint, method, body);
+}
+
+function handleOfflineApi(endpoint, method, body) {
+  let restaurants = LocalStore.get("restaurants", SEED_RESTAURANTS);
+  let reservations = LocalStore.get("reservations", SEED_RESERVATIONS);
+
+  const url = new URL(endpoint, "http://localhost");
+  const path = url.pathname;
+  const params = url.searchParams;
+
+  // GET /api/restaurants
+  if (path === "/api/restaurants" && method === "GET") {
+    return { success: true, restaurants };
+  }
+
+  // GET /api/restaurants/:id
+  if (path.startsWith("/api/restaurants/") && method === "GET") {
+    const id = parseInt(path.split("/").pop());
+    const r = restaurants.find(item => item.id === id);
+    if (r) return { success: true, restaurant: r };
+    return { success: false, error: "Restaurant not found" };
+  }
+
+  // GET /api/reservations
+  if (path === "/api/reservations" && method === "GET") {
+    const wallet = params.get("wallet");
+    const restId = params.get("restaurant_id");
+    const bookingId = params.get("booking_id");
+
+    let list = [...reservations];
+    if (wallet) list = list.filter(r => r.wallet_address.toLowerCase() === wallet.toLowerCase());
+    if (restId) list = list.filter(r => r.restaurant_id === parseInt(restId));
+    if (bookingId) list = list.filter(r => r.booking_id === bookingId);
+
+    return { success: true, reservations: list };
+  }
+
+  // POST /api/reservations
+  if (path === "/api/reservations" && method === "POST") {
+    const rest = restaurants.find(r => r.id === parseInt(body.restaurant_id));
+    if (!rest) return { success: false, error: "Restaurant not found" };
+
+    // Check table conflict / double booking
+    const requestedTableId = body.table_id || (rest.tables[0] ? rest.tables[0].id : 1);
+    const conflict = reservations.find(r => 
+      r.table_id === requestedTableId &&
+      r.reservation_date === body.reservation_date &&
+      r.reservation_time === body.reservation_time &&
+      !["Cancelled", "No-show"].includes(r.booking_status)
+    );
+
+    if (conflict) {
+      return { success: false, error: "Conflict: This table is already booked for the selected date and time slot." };
+    }
+
+    const tableObj = rest.tables.find(t => t.id === requestedTableId) || rest.tables[0];
+    const dateCompact = body.reservation_date.replace(/-/g, "");
+    const randSuffix = Math.floor(10000 + Math.random() * 90000);
+    const newBookingId = `TC-${dateCompact}-${randSuffix}`;
+
+    const newRes = {
+      id: reservations.length + 1,
+      booking_id: newBookingId,
+      restaurant_id: rest.id,
+      restaurant_name: rest.name,
+      restaurant_location: rest.location,
+      restaurant_cuisine: rest.cuisine,
+      restaurant_image: rest.image_url,
+      table_id: tableObj.id,
+      table_number: tableObj.table_number,
+      customer_name: body.customer_name || "Guest Diner",
+      customer_email: body.customer_email || "",
+      customer_phone: body.customer_phone || "",
+      reservation_date: body.reservation_date,
+      reservation_time: body.reservation_time,
+      guest_count: body.guest_count || 2,
+      booking_fee: rest.booking_fee,
+      wallet_address: body.wallet_address || "0x71C4cfF2B9D6F8C380482B768B1812aA9c27A89F",
+      transaction_hash: body.transaction_hash || null,
+      payment_status: body.payment_status || "Pending Payment",
+      booking_status: body.booking_status || "Pending Payment",
+      special_requests: body.special_requests || "",
+      created_at: new Date().toISOString()
+    };
+
+    reservations.unshift(newRes);
+    LocalStore.set("reservations", reservations);
+    return { success: true, booking: newRes };
+  }
+
+  // PATCH /api/reservations/:id
+  if (path.startsWith("/api/reservations/") && method === "PATCH") {
+    const bookingId = path.split("/").pop();
+    const idx = reservations.findIndex(r => r.booking_id === bookingId);
+    if (idx !== -1) {
+      Object.assign(reservations[idx], body);
+      LocalStore.set("reservations", reservations);
+      return { success: true, booking: reservations[idx] };
+    }
+    return { success: false, error: "Booking not found" };
+  }
+
+  // GET /api/tables
+  if (path === "/api/tables" && method === "GET") {
+    const restId = parseInt(params.get("restaurant_id") || "1");
+    const rest = restaurants.find(r => r.id === restId);
+    return { success: true, tables: rest ? rest.tables : [] };
+  }
+
+  // POST /api/tables
+  if (path === "/api/tables" && method === "POST") {
+    const restId = parseInt(body.restaurant_id);
+    const rest = restaurants.find(r => r.id === restId);
+    if (rest) {
+      const newTable = {
+        id: Date.now(),
+        restaurant_id: restId,
+        table_number: body.table_number,
+        capacity: parseInt(body.capacity),
+        status: body.status || "Available"
+      };
+      rest.tables.push(newTable);
+      LocalStore.set("restaurants", restaurants);
+      return { success: true, table_id: newTable.id };
+    }
+  }
+
+  // PATCH /api/tables/:id
+  if (path.startsWith("/api/tables/") && method === "PATCH") {
+    const tableId = parseInt(path.split("/").pop());
+    for (const r of restaurants) {
+      const t = r.tables.find(tbl => tbl.id === tableId);
+      if (t) {
+        t.status = body.status;
+        LocalStore.set("restaurants", restaurants);
+        return { success: true, table_id: tableId, status: body.status };
+      }
+    }
+  }
+
+  // GET /api/stats
+  if (path === "/api/stats" && method === "GET") {
+    const restId = parseInt(params.get("restaurant_id") || "1");
+    const restReservations = reservations.filter(r => r.restaurant_id === restId);
+    const todayStr = new Date().toISOString().split("T")[0];
+
+    const todayCount = restReservations.filter(r => r.reservation_date === todayStr).length;
+    const confirmedCount = restReservations.filter(r => r.booking_status === "Confirmed").length;
+    const pendingCount = restReservations.filter(r => r.booking_status === "Pending Payment").length;
+    const revenueEth = restReservations
+      .filter(r => ["Confirmed", "Completed"].includes(r.booking_status))
+      .reduce((sum, r) => sum + r.booking_fee, 0);
+
+    const rest = restaurants.find(r => r.id === restId);
+    const availableTables = rest ? rest.tables.filter(t => t.status === "Available").length : 0;
+
+    return {
+      success: true,
+      stats: {
+        today_reservations: todayCount,
+        confirmed_bookings: confirmedCount,
+        pending_payments: pendingCount,
+        total_revenue_eth: Number(revenueEth.toFixed(4)),
+        total_revenue_thb: Math.round(revenueEth * ETH_TO_THB_RATE),
+        available_tables: availableTables
+      }
+    };
+  }
+
+  // POST /api/reset-demo
+  if (path === "/api/reset-demo") {
+    LocalStore.reset();
+    return { success: true, message: "Reset complete" };
+  }
+
+  return { success: true };
+}
+
+// ================= INITIALIZATION ================= //
+
+document.addEventListener("DOMContentLoaded", async () => {
+  initIcons();
+  setupNavigation();
+  setupWalletListeners();
+  await loadRestaurants();
+  setupQuickSearch();
+  checkExistingWallet();
+
+  // Handle URL hash routing if present
+  const hash = window.location.hash.replace("#", "");
+  if (hash) {
+    navigateTo(hash);
+  } else {
+    navigateTo("home");
+  }
+});
+
+function initIcons() {
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+}
+
+// ================= DATA FETCHING ================= //
+
+async function loadRestaurants() {
+  try {
+    const data = await apiRequest("/api/restaurants");
+    if (data.success) {
+      state.restaurants = data.restaurants.map(r => ({
+        ...r,
+        wallet_address: safeChecksumAddress(r.wallet_address)
+      }));
+      renderFeaturedRestaurants();
+      renderRestaurantList();
+      populateAdminRestaurantSelect();
+    }
+  } catch (err) {
+    console.error("Failed to load restaurants:", err);
+  }
+}
+
+async function loadAdminData(restaurantId) {
+  try {
+    const [statsData, resData, tablesData] = await Promise.all([
+      apiRequest(`/api/stats?restaurant_id=${restaurantId}`),
+      apiRequest(`/api/reservations?restaurant_id=${restaurantId}`),
+      apiRequest(`/api/tables?restaurant_id=${restaurantId}`)
+    ]);
+
+    if (statsData.success) state.admin.stats = statsData.stats;
+    if (resData.success) state.admin.reservations = resData.reservations;
+    if (tablesData.success) state.admin.tables = tablesData.tables;
+
+    renderAdminDashboard();
+  } catch (err) {
+    console.error("Failed to load admin data:", err);
+  }
+}
+
+// ================= NAVIGATION ================= //
+
+function navigateTo(viewName, params = {}) {
+  state.view = viewName;
+  window.location.hash = viewName;
+
+  // Hide all views
+  document.querySelectorAll(".page-view").forEach(el => el.classList.add("hidden"));
+
+  // Show active view
+  const target = document.getElementById(`view-${viewName}`);
+  if (target) {
+    target.classList.remove("hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // Update active state in nav links
+  document.querySelectorAll(".nav-link").forEach(link => {
+    if (link.dataset.target === viewName) {
+      link.classList.add("text-[#E5C378]", "border-b", "border-[#E5C378]");
+      link.classList.remove("text-stone-300");
+    } else {
+      link.classList.remove("text-[#E5C378]", "border-b", "border-[#E5C378]");
+      link.classList.add("text-stone-300");
+    }
+  });
+
+  // Handle specific view hooks
+  if (viewName === "restaurants") {
+    renderRestaurantList();
+  } else if (viewName === "restaurant-detail" && params.restaurantId) {
+    loadRestaurantDetail(params.restaurantId);
+  } else if (viewName === "my-bookings") {
+    loadMyReservations();
+  } else if (viewName === "admin") {
+    loadAdminData(state.admin.selectedRestaurantId);
+  } else if (viewName === "smart-contract") {
+    renderBlockchainEvents();
+  }
+
+  setTimeout(initIcons, 50);
+}
+
+function setupNavigation() {
+  document.querySelectorAll("[data-nav]").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const target = btn.dataset.nav;
+      navigateTo(target);
+    });
+  });
+}
+
+// ================= WALLET & METAMASK INTEGRATION ================= //
+
+function shortenAddress(addr) {
+  if (!addr) return "";
+  return addr.substring(0, 6) + "..." + addr.substring(addr.length - 4);
+}
+
+async function checkExistingWallet() {
+  if (typeof window.ethereum !== "undefined") {
+    try {
+      const accounts = await window.ethereum.request({ method: "eth_accounts" });
+      if (accounts.length > 0) {
+        const chainId = await window.ethereum.request({ method: "eth_chainId" });
+        setWalletConnected(accounts[0], chainId);
+      }
+    } catch (e) {
+      console.log("No pre-connected wallet");
+    }
+  }
+}
+
+function setupWalletListeners() {
+  const connectBtn = document.getElementById("connect-wallet-btn");
+  const heroConnectBtn = document.getElementById("hero-connect-wallet-btn");
+  const walletDropdown = document.getElementById("wallet-dropdown");
+
+  if (connectBtn) {
+    connectBtn.addEventListener("click", () => {
+      if (state.wallet.isConnected) {
+        walletDropdown.classList.toggle("hidden");
+      } else {
+        connectMetaMask();
+      }
+    });
+  }
+
+  if (heroConnectBtn) {
+    heroConnectBtn.addEventListener("click", () => {
+      if (!state.wallet.isConnected) {
+        connectMetaMask();
+      } else {
+        navigateTo("restaurants");
+      }
+    });
+  }
+
+  // Disconnect button
+  const disconnectBtn = document.getElementById("disconnect-wallet-btn");
+  if (disconnectBtn) {
+    disconnectBtn.addEventListener("click", () => {
+      disconnectWallet();
+      walletDropdown.classList.add("hidden");
+    });
+  }
+
+  // Copy address button
+  const copyBtn = document.getElementById("copy-address-btn");
+  if (copyBtn) {
+    copyBtn.addEventListener("click", () => {
+      if (state.wallet.address) {
+        navigator.clipboard.writeText(state.wallet.address);
+        showToast("Address copied to clipboard!", "success");
+        walletDropdown.classList.add("hidden");
+      }
+    });
+  }
+
+  // Close dropdown on click outside
+  document.addEventListener("click", (e) => {
+    if (walletDropdown && !connectBtn.contains(e.target) && !walletDropdown.contains(e.target)) {
+      walletDropdown.classList.add("hidden");
+    }
+  });
+
+  // Listen to MetaMask account & network changes
+  if (typeof window.ethereum !== "undefined") {
+    window.ethereum.on("accountsChanged", (accounts) => {
+      if (accounts.length > 0) {
+        setWalletConnected(accounts[0], state.wallet.chainId);
+        showToast("Wallet account changed", "info");
+      } else {
+        disconnectWallet();
+      }
+    });
+
+    window.ethereum.on("chainChanged", (chainId) => {
+      state.wallet.chainId = chainId;
+      state.wallet.isSepolia = (chainId === SEPOLIA_CHAIN_ID_HEX || parseInt(chainId, 16) === SEPOLIA_CHAIN_ID_DEC);
+      updateWalletUI();
+      if (!state.wallet.isSepolia) {
+        showToast("Please switch to Ethereum Sepolia Testnet", "warning");
+      }
+    });
+  }
+}
+
+async function connectMetaMask() {
+  const connectBtn = document.getElementById("connect-wallet-btn");
+  if (connectBtn) {
+    connectBtn.innerHTML = `
+      <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-amber-300 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+      </svg>
+      Connecting...
+    `;
+  }
+
+  // If MetaMask is installed
+  if (typeof window.ethereum !== "undefined") {
+    try {
+      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      const chainId = await window.ethereum.request({ method: "eth_chainId" });
+      setWalletConnected(accounts[0], chainId);
+
+      // Verify Sepolia network
+      const isSepolia = (chainId === SEPOLIA_CHAIN_ID_HEX || parseInt(chainId, 16) === SEPOLIA_CHAIN_ID_DEC);
+      if (!isSepolia) {
+        await promptSwitchToSepolia();
+      } else {
+        showToast("Connected to MetaMask on Sepolia Testnet!", "success");
+      }
+    } catch (err) {
+      console.error("MetaMask connection error:", err);
+      updateWalletUI();
+      if (err.code === 4001) {
+        showToast("Wallet connection request was rejected by user.", "error");
+      } else {
+        showToast("Error connecting to MetaMask: " + (err.message || "Unknown error"), "error");
+      }
+    }
+  } else {
+    // MetaMask is NOT installed
+    updateWalletUI();
+    showMetaMaskModal();
+  }
+}
+
+async function promptSwitchToSepolia() {
+  try {
+    await window.ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: SEPOLIA_CHAIN_ID_HEX }]
+    });
+    state.wallet.isSepolia = true;
+    updateWalletUI();
+    showToast("Switched to Ethereum Sepolia Testnet", "success");
+  } catch (switchError) {
+    if (switchError.code === 4902) {
+      try {
+        await window.ethereum.request({
+          method: "wallet_addEthereumChain",
+          params: [{
+            chainId: SEPOLIA_CHAIN_ID_HEX,
+            chainName: "Ethereum Sepolia Testnet",
+            nativeCurrency: { name: "Sepolia ETH", symbol: "ETH", decimals: 18 },
+            rpcUrls: ["https://rpc.sepolia.org"],
+            blockExplorerUrls: ["https://sepolia.etherscan.io/"]
+          }]
+        });
+        state.wallet.isSepolia = true;
+        updateWalletUI();
+      } catch (addError) {
+        showToast("Failed to add Sepolia Testnet to MetaMask", "error");
+      }
+    } else {
+      showToast("Please switch network to Sepolia in MetaMask", "warning");
+    }
+  }
+}
+
+function setWalletConnected(address, chainId) {
+  const safeAddr = safeChecksumAddress(address);
+  state.wallet.address = safeAddr;
+  state.wallet.shortAddress = shortenAddress(safeAddr);
+  state.wallet.isConnected = true;
+  state.wallet.chainId = chainId;
+  state.wallet.isSepolia = (chainId === SEPOLIA_CHAIN_ID_HEX || parseInt(chainId, 16) === SEPOLIA_CHAIN_ID_DEC || chainId === "simulated");
+  state.wallet.isDemoSimulated = (chainId === "simulated");
+
+  updateWalletUI();
+
+  if (state.view === "my-bookings") {
+    loadMyReservations();
+  }
+}
+
+function disconnectWallet() {
+  state.wallet.address = null;
+  state.wallet.shortAddress = null;
+  state.wallet.isConnected = false;
+  state.wallet.isDemoSimulated = false;
+  updateWalletUI();
+  showToast("Wallet disconnected", "info");
+}
+
+function connectDemoWallet() {
+  const demoAddr = "0x71c4cFf2B9D6f8C380482B768b1812aA9c27a89F";
+  setWalletConnected(demoAddr, "simulated");
+  closeModal("metamask-modal");
+  showToast("Connected Sepolia Testnet Demo Wallet (0x71c4...a89F)", "success");
+}
+
+function updateWalletUI() {
+  const connectBtn = document.getElementById("connect-wallet-btn");
+  const heroConnectBtn = document.getElementById("hero-connect-wallet-btn");
+  const networkBadge = document.getElementById("network-badge");
+
+  if (!connectBtn) return;
+
+  if (state.wallet.isConnected) {
+    connectBtn.innerHTML = `
+      <span class="w-2 h-2 rounded-full ${state.wallet.isSepolia ? 'bg-emerald-400' : 'bg-amber-400'} mr-2 inline-block pulse-dot"></span>
+      <span class="font-mono text-xs sm:text-sm text-stone-100">${state.wallet.shortAddress}</span>
+      <i data-lucide="chevron-down" class="w-4 h-4 ml-1.5 text-stone-400"></i>
+    `;
+    connectBtn.className = "flex items-center px-3.5 py-1.5 rounded-full border border-[#C5A880]/30 bg-stone-900/80 hover:bg-stone-800/90 text-sm transition-all";
+
+    if (heroConnectBtn) {
+      heroConnectBtn.innerHTML = `
+        <i data-lucide="check-circle" class="w-4 h-4 mr-2 text-emerald-400"></i>
+        <span>Wallet: ${state.wallet.shortAddress}</span>
+      `;
+      heroConnectBtn.className = "px-6 py-3 rounded-lg border border-emerald-500/40 bg-emerald-950/20 text-emerald-300 text-sm font-medium flex items-center";
+    }
+
+    if (networkBadge) {
+      networkBadge.innerHTML = `
+        <span class="w-1.5 h-1.5 rounded-full ${state.wallet.isSepolia ? 'bg-purple-400' : 'bg-amber-400'} mr-1.5"></span>
+        <span>${state.wallet.isSepolia ? 'Sepolia Testnet' : 'Wrong Network'}</span>
+      `;
+      networkBadge.className = `hidden sm:inline-flex items-center text-xs px-2.5 py-1 rounded-full border ${state.wallet.isSepolia ? 'border-purple-500/30 bg-purple-950/20 text-purple-300' : 'border-amber-500/30 bg-amber-950/20 text-amber-300'}`;
+    }
+  } else {
+    connectBtn.innerHTML = `
+      <i data-lucide="wallet" class="w-4 h-4 mr-2 text-stone-900"></i>
+      <span>Connect MetaMask</span>
+    `;
+    connectBtn.className = "gold-button flex items-center px-4 py-2 rounded-full text-xs sm:text-sm font-semibold shadow-md";
+
+    if (heroConnectBtn) {
+      heroConnectBtn.innerHTML = `
+        <i data-lucide="wallet" class="w-4 h-4 mr-2"></i>
+        <span>Connect Wallet</span>
+      `;
+      heroConnectBtn.className = "px-6 py-3 rounded-lg border border-[#C5A880]/50 hover:bg-[#C5A880]/10 text-[#E5C378] text-sm font-semibold transition-all flex items-center";
+    }
+
+    if (networkBadge) {
+      networkBadge.innerHTML = `
+        <span class="w-1.5 h-1.5 rounded-full bg-purple-400 mr-1.5"></span>
+        <span>Sepolia Testnet</span>
+      `;
+      networkBadge.className = "hidden sm:inline-flex items-center text-xs px-2.5 py-1 rounded-full border border-purple-500/30 bg-purple-950/20 text-purple-300";
+    }
+  }
+
+  // Update dropdown wallet info
+  const dropAddr = document.getElementById("dropdown-wallet-address");
+  const dropNetwork = document.getElementById("dropdown-wallet-network");
+  const dropEtherscan = document.getElementById("dropdown-etherscan-link");
+
+  if (dropAddr && state.wallet.address) {
+    dropAddr.innerText = state.wallet.shortAddress;
+  }
+  if (dropNetwork) {
+    dropNetwork.innerText = state.wallet.isSepolia ? "Sepolia Testnet (11155111)" : "Unsupported Network";
+  }
+  if (dropEtherscan && state.wallet.address) {
+    dropEtherscan.href = `https://sepolia.etherscan.io/address/${state.wallet.address}`;
+  }
+
+  initIcons();
+}
+
+function showMetaMaskModal() {
+  const modal = document.getElementById("metamask-modal");
+  if (modal) modal.classList.remove("hidden");
+}
+
+// ================= RESTAURANT DISCOVERY ================= //
+
+function setupQuickSearch() {
+  const searchInput = document.getElementById("restaurant-search-input");
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      state.searchQuery = e.target.value.toLowerCase();
+      renderRestaurantList();
+    });
+  }
+
+  // Cuisine filter buttons
+  document.querySelectorAll(".cuisine-filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".cuisine-filter-btn").forEach(b => {
+        b.classList.remove("bg-[#C5A880]", "text-stone-900");
+        b.classList.add("bg-stone-900", "text-stone-300", "border-stone-800");
+      });
+      btn.classList.add("bg-[#C5A880]", "text-stone-900");
+      btn.classList.remove("bg-stone-900", "text-stone-300");
+
+      state.activeFilterCuisine = btn.dataset.cuisine;
+      renderRestaurantList();
+    });
+  });
+}
+
+function renderFeaturedRestaurants() {
+  const container = document.getElementById("featured-restaurants-grid");
+  if (!container) return;
+
+  const featured = state.restaurants.slice(0, 3);
+  container.innerHTML = featured.map(r => createRestaurantCardHtml(r)).join("");
+  initIcons();
+}
+
+function renderRestaurantList() {
+  const container = document.getElementById("restaurants-grid");
+  if (!container) return;
+
+  let filtered = state.restaurants.filter(r => {
+    const matchesCuisine = (state.activeFilterCuisine === "All") || 
+      r.cuisine.toLowerCase().includes(state.activeFilterCuisine.toLowerCase());
+    const matchesSearch = !state.searchQuery || 
+      r.name.toLowerCase().includes(state.searchQuery) ||
+      r.cuisine.toLowerCase().includes(state.searchQuery) ||
+      r.location.toLowerCase().includes(state.searchQuery);
+    return matchesCuisine && matchesSearch;
+  });
+
+  const countBadge = document.getElementById("filtered-results-count");
+  if (countBadge) {
+    countBadge.innerText = `${filtered.length} restaurant${filtered.length === 1 ? '' : 's'} available`;
+  }
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div class="col-span-full py-16 text-center">
+        <i data-lucide="utensils-crossed" class="w-12 h-12 mx-auto text-stone-600 mb-3"></i>
+        <h3 class="text-lg font-serif text-stone-300">No restaurants found</h3>
+        <p class="text-sm text-stone-500 mt-1">Try clearing filters or search terms</p>
+      </div>
+    `;
+    initIcons();
+    return;
+  }
+
+  container.innerHTML = filtered.map(r => createRestaurantCardHtml(r)).join("");
+  initIcons();
+}
+
+function createRestaurantCardHtml(restaurant) {
+  const timeSlots = ["17:30", "18:00", "18:30", "19:00", "19:30", "20:00"];
+
+  return `
+    <div class="glass-panel rounded-2xl overflow-hidden group hover:border-[#C5A880]/50 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-black/50">
+      <div>
+        <!-- Image Container -->
+        <div class="relative h-56 w-full overflow-hidden bg-stone-900">
+          <img src="${restaurant.image_url}" alt="${restaurant.name}" 
+               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 brightness-95" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+          
+          <!-- Rating badge -->
+          <div class="absolute top-3.5 right-3.5 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 flex items-center text-xs font-semibold text-amber-300">
+            <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400 text-amber-400 mr-1"></i>
+            <span>${restaurant.rating.toFixed(1)}</span>
+          </div>
+
+          <!-- Cuisine Tag -->
+          <div class="absolute bottom-3 left-4 bg-stone-900/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-medium text-stone-200 border border-stone-700/60">
+            ${restaurant.cuisine}
+          </div>
+        </div>
+
+        <!-- Info Body -->
+        <div class="p-5">
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="text-xl font-serif font-semibold text-[#F8F5EE] group-hover:text-[#E5C378] transition-colors">
+                ${restaurant.name}
+              </h3>
+              <p class="text-xs text-stone-400 flex items-center mt-1">
+                <i data-lucide="map-pin" class="w-3.5 h-3.5 mr-1 text-stone-500"></i>
+                ${restaurant.location}
+              </p>
+            </div>
+          </div>
+
+          <p class="text-xs text-stone-400 mt-3 line-clamp-2 leading-relaxed">
+            ${restaurant.description}
+          </p>
+
+          <!-- Pricing & Fee stats -->
+          <div class="grid grid-cols-2 gap-2 mt-4 pt-4 border-t border-stone-800/80">
+            <div>
+              <span class="text-[10px] uppercase tracking-wider text-stone-500 block">Avg Price</span>
+              <span class="text-xs font-medium text-stone-300">${restaurant.average_price}</span>
+            </div>
+            <div>
+              <span class="text-[10px] uppercase tracking-wider text-stone-500 block">Booking Fee</span>
+              <span class="text-xs font-semibold text-[#E5C378] flex items-center">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5 mr-1 text-[#E5C378]"></i>
+                ${restaurant.booking_fee} ETH
+              </span>
+            </div>
+          </div>
+
+          <!-- Available Times preview -->
+          <div class="mt-4">
+            <span class="text-[11px] font-medium text-stone-400 block mb-2">Available Slots Today</span>
+            <div class="flex flex-wrap gap-1.5">
+              ${timeSlots.slice(0, 4).map(t => `
+                <span class="text-[11px] px-2 py-0.5 rounded-md bg-stone-800/90 text-stone-300 border border-stone-700/50">
+                  ${t}
+                </span>
+              `).join("")}
+              <span class="text-[11px] px-2 py-0.5 rounded-md bg-stone-900 text-stone-500">
+                +2 more
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <div class="p-5 pt-0">
+        <button onclick="viewRestaurantDetails(${restaurant.id})" 
+                class="w-full py-2.5 rounded-xl border border-[#C5A880]/30 hover:border-[#C5A880] bg-stone-900 hover:bg-[#C5A880]/10 text-stone-200 hover:text-[#E5C378] text-xs font-semibold tracking-wide transition-all duration-200 flex items-center justify-center">
+          <span>View Restaurant & Reserve</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5 ml-1.5"></i>
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+// ================= RESTAURANT DETAIL & BOOKING PANEL ================= //
+
+async function viewRestaurantDetails(restaurantId) {
+  navigateTo("restaurant-detail", { restaurantId });
+}
+
+async function loadRestaurantDetail(restaurantId) {
+  try {
+    const data = await apiRequest(`/api/restaurants/${restaurantId}`);
+    if (!data.success) return;
+
+    const r = data.restaurant;
+    r.wallet_address = safeChecksumAddress(r.wallet_address);
+    state.selectedRestaurant = r;
+    state.bookingDraft.restaurantId = r.id;
+    state.bookingDraft.bookingFee = r.booking_fee;
+
+    // Render Gallery
+    const heroImage = document.getElementById("detail-hero-image");
+    if (heroImage) heroImage.src = r.image_url;
+
+    const galleryGrid = document.getElementById("detail-gallery-grid");
+    if (galleryGrid && r.gallery) {
+      galleryGrid.innerHTML = r.gallery.map(img => `
+        <div class="h-28 rounded-xl overflow-hidden bg-stone-900 cursor-pointer hover:opacity-90 transition-opacity">
+          <img src="${img}" class="w-full h-full object-cover" onclick="document.getElementById('detail-hero-image').src = '${img}'" />
+        </div>
+      `).join("");
+    }
+
+    // Title & Info
+    document.getElementById("detail-name").innerText = r.name;
+    document.getElementById("detail-cuisine").innerText = r.cuisine;
+    document.getElementById("detail-rating").innerText = r.rating.toFixed(1);
+    document.getElementById("detail-location").innerText = r.location;
+    document.getElementById("detail-hours").innerText = r.opening_hours;
+    document.getElementById("detail-desc").innerText = r.description;
+    document.getElementById("detail-avg-price").innerText = r.average_price;
+    document.getElementById("detail-booking-fee").innerText = `${r.booking_fee} ETH`;
+    document.getElementById("detail-cancellation").innerText = r.cancellation_policy;
+
+    // Render Facilities
+    const facContainer = document.getElementById("detail-facilities");
+    if (facContainer && r.facilities) {
+      facContainer.innerHTML = r.facilities.map(f => `
+        <span class="inline-flex items-center text-xs px-3 py-1.5 rounded-lg bg-stone-900 border border-stone-800 text-stone-300">
+          <i data-lucide="check" class="w-3.5 h-3.5 mr-1.5 text-[#E5C378]"></i>
+          ${f}
+        </span>
+      `).join("");
+    }
+
+    // Render Menu Preview
+    const menuContainer = document.getElementById("detail-menu");
+    if (menuContainer && r.menu) {
+      menuContainer.innerHTML = r.menu.map(item => `
+        <div class="p-4 rounded-xl bg-stone-900/60 border border-stone-800/80 hover:border-stone-700 transition-colors">
+          <div class="flex justify-between items-baseline mb-1">
+            <h4 class="font-serif font-semibold text-stone-200 text-base">${item.name}</h4>
+            <span class="text-xs font-semibold text-[#E5C378] ml-2 font-mono">${item.price}</span>
+          </div>
+          <p class="text-xs text-stone-400">${item.desc}</p>
+        </div>
+      `).join("");
+    }
+
+    // Initialize Booking Form Controls
+    initBookingForm(r);
+    initIcons();
+  } catch (err) {
+    console.error("Failed to load restaurant details:", err);
+  }
+}
+
+function initBookingForm(restaurant) {
+  const datePicker = document.getElementById("booking-date-picker");
+  const todayStr = new Date().toISOString().split("T")[0];
+  if (datePicker) {
+    datePicker.min = todayStr;
+    datePicker.value = state.bookingDraft.date || todayStr;
+    datePicker.onchange = (e) => {
+      state.bookingDraft.date = e.target.value;
+      updateBookingSummary();
+    };
+  }
+
+  renderGuestButtons();
+  renderTimeSlots();
+  renderTableOptions(restaurant.tables || []);
+  updateBookingSummary();
+}
+
+function renderGuestButtons() {
+  const container = document.getElementById("booking-guest-selector");
+  if (!container) return;
+
+  const guests = [1, 2, 3, 4, 5, 6, 8];
+  container.innerHTML = guests.map(num => `
+    <button type="button" 
+            onclick="setGuestCount(${num})"
+            class="guest-count-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${state.bookingDraft.guestCount === num ? 'bg-[#C5A880] text-stone-900 font-bold' : 'bg-stone-900 border border-stone-800 text-stone-300 hover:border-stone-700'}">
+      ${num} ${num === 1 ? 'Guest' : 'Guests'}
+    </button>
+  `).join("");
+}
+
+function setGuestCount(count) {
+  state.bookingDraft.guestCount = count;
+  renderGuestButtons();
+  updateBookingSummary();
+}
+
+function renderTimeSlots() {
+  const container = document.getElementById("booking-time-slots");
+  if (!container) return;
+
+  const times = ["17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00"];
+  container.innerHTML = times.map(t => `
+    <button type="button" 
+            onclick="setTimeSlot('${t}')"
+            class="time-slot-btn py-2 px-2.5 rounded-lg text-xs font-medium transition-all ${state.bookingDraft.time === t ? 'bg-[#C5A880] text-stone-900 font-bold shadow-md' : 'bg-stone-900 border border-stone-800 text-stone-300 hover:border-stone-700'}">
+      ${t}
+    </button>
+  `).join("");
+}
+
+function setTimeSlot(time) {
+  state.bookingDraft.time = time;
+  renderTimeSlots();
+  updateBookingSummary();
+}
+
+function renderTableOptions(tables) {
+  const select = document.getElementById("booking-table-select");
+  if (!select) return;
+
+  let optionsHtml = `<option value="">Auto-Assign Best Available Table</option>`;
+  tables.forEach(t => {
+    const isAvail = (t.status === "Available");
+    optionsHtml += `
+      <option value="${t.id}" ${isAvail ? '' : 'disabled'}>
+        ${t.table_number} (${t.capacity} guests) — ${t.status}
+      </option>
+    `;
+  });
+  select.innerHTML = optionsHtml;
+  select.onchange = (e) => {
+    state.bookingDraft.tableId = e.target.value ? parseInt(e.target.value) : null;
+    const selectedOpt = select.options[select.selectedIndex];
+    state.bookingDraft.tableName = e.target.value ? selectedOpt.text.split(" (")[0] : null;
+    updateBookingSummary();
+  };
+}
+
+function updateBookingSummary() {
+  const r = state.selectedRestaurant;
+  if (!r) return;
+
+  const dateEl = document.getElementById("summary-date");
+  const timeEl = document.getElementById("summary-time");
+  const guestsEl = document.getElementById("summary-guests");
+  const feeEthEl = document.getElementById("summary-fee-eth");
+  const feeThbEl = document.getElementById("summary-fee-thb");
+  const tableEl = document.getElementById("summary-table");
+
+  if (dateEl) dateEl.innerText = state.bookingDraft.date;
+  if (timeEl) timeEl.innerText = state.bookingDraft.time;
+  if (guestsEl) guestsEl.innerText = `${state.bookingDraft.guestCount} Guests`;
+  if (feeEthEl) feeEthEl.innerText = `${r.booking_fee} ETH`;
+  if (feeThbEl) feeThbEl.innerText = `≈ ${(r.booking_fee * ETH_TO_THB_RATE).toLocaleString()} THB`;
+  if (tableEl) tableEl.innerText = state.bookingDraft.tableName || "Smart Auto-Selection";
+}
+
+// ================= CHECKOUT & BLOCKCHAIN PAYMENT FLOW ================= //
+
+function proceedToCheckout() {
+  const r = state.selectedRestaurant;
+  if (!r) return;
+
+  // Read customer inputs
+  const nameInput = document.getElementById("customer-name-input");
+  const emailInput = document.getElementById("customer-email-input");
+  const phoneInput = document.getElementById("customer-phone-input");
+  const requestsInput = document.getElementById("customer-requests-input");
+
+  state.bookingDraft.customerName = nameInput ? nameInput.value.trim() || "Guest Diner" : "Guest Diner";
+  state.bookingDraft.customerEmail = emailInput ? emailInput.value.trim() : "";
+  state.bookingDraft.customerPhone = phoneInput ? phoneInput.value.trim() : "";
+  state.bookingDraft.specialRequests = requestsInput ? requestsInput.value.trim() : "";
+
+  // Populate Checkout Modal
+  document.getElementById("checkout-restaurant-name").innerText = r.name;
+  document.getElementById("checkout-date").innerText = state.bookingDraft.date;
+  document.getElementById("checkout-time").innerText = state.bookingDraft.time;
+  document.getElementById("checkout-guests").innerText = `${state.bookingDraft.guestCount} Guests`;
+  document.getElementById("checkout-fee-eth").innerText = `${r.booking_fee} ETH`;
+  document.getElementById("checkout-fee-thb").innerText = `≈ ${(r.booking_fee * ETH_TO_THB_RATE).toLocaleString()} THB`;
+  document.getElementById("checkout-network").innerText = "Ethereum / Sepolia Testnet";
+  document.getElementById("checkout-restaurant-wallet").innerText = shortenAddress(r.wallet_address);
+
+  const statusText = document.getElementById("checkout-booking-status-text");
+  if (statusText) statusText.innerText = "Pending Payment";
+  const statusBadge = document.getElementById("checkout-booking-status");
+  if (statusBadge) {
+    statusBadge.className = "px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-950/60 text-amber-400 border border-amber-500/40 flex items-center";
+  }
+
+  updateCheckoutWalletSection();
+  resetPaymentProgress();
+
+  const modal = document.getElementById("checkout-modal");
+  if (modal) modal.classList.remove("hidden");
+
+  initIcons();
+}
+
+function updateCheckoutWalletSection() {
+  const walletSection = document.getElementById("checkout-wallet-status");
+  const payBtn = document.getElementById("pay-booking-fee-btn");
+
+  if (!walletSection || !payBtn) return;
+
+  if (state.wallet.isConnected) {
+    walletSection.innerHTML = `
+      <div class="flex items-center justify-between p-3.5 rounded-xl bg-stone-900 border border-stone-800">
+        <div class="flex items-center">
+          <div class="w-8 h-8 rounded-full bg-purple-950/60 border border-purple-500/30 flex items-center justify-center mr-3 text-purple-300">
+            <i data-lucide="wallet" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <div class="flex items-center">
+              <span class="text-xs font-mono text-stone-200 font-semibold">${state.wallet.shortAddress}</span>
+              <span class="ml-2 text-[10px] px-2 py-0.5 rounded-full bg-emerald-950/40 text-emerald-400 border border-emerald-500/30">Connected</span>
+            </div>
+            <span class="text-[11px] text-stone-400 block mt-0.5">Network: Sepolia Testnet (11155111)</span>
+          </div>
+        </div>
+        <button type="button" onclick="disconnectWallet(); updateCheckoutWalletSection();" class="text-xs text-stone-500 hover:text-stone-300 underline">
+          Change
+        </button>
+      </div>
+    `;
+    payBtn.disabled = false;
+    payBtn.className = "w-full gold-button py-3.5 px-4 rounded-xl text-stone-950 text-sm font-bold flex items-center justify-center space-x-2 shadow-lg";
+    payBtn.innerHTML = `
+      <i data-lucide="zap" class="w-4 h-4 fill-stone-950"></i>
+      <span>Pay Booking Fee with MetaMask (${state.bookingDraft.bookingFee} ETH)</span>
+    `;
+  } else {
+    walletSection.innerHTML = `
+      <div class="p-4 rounded-xl bg-amber-950/20 border border-amber-500/30 text-center">
+        <i data-lucide="alert-circle" class="w-6 h-6 text-amber-400 mx-auto mb-1.5"></i>
+        <p class="text-xs text-amber-200 font-medium">MetaMask is required to complete blockchain payments.</p>
+        <div class="mt-3 flex gap-2 justify-center">
+          <button type="button" onclick="connectMetaMask().then(updateCheckoutWalletSection)" class="px-4 py-2 rounded-lg bg-amber-400 hover:bg-amber-300 text-stone-950 text-xs font-bold transition-colors">
+            Connect MetaMask
+          </button>
+          <button type="button" onclick="connectDemoWallet(); updateCheckoutWalletSection();" class="px-3 py-2 rounded-lg border border-amber-500/40 text-amber-300 hover:bg-amber-950/30 text-xs font-medium">
+            Use Demo Wallet
+          </button>
+        </div>
+      </div>
+    `;
+    payBtn.disabled = true;
+    payBtn.className = "w-full py-3.5 px-4 rounded-xl bg-stone-800 text-stone-500 text-sm font-semibold cursor-not-allowed flex items-center justify-center";
+    payBtn.innerHTML = `<span>Please Connect Wallet to Pay</span>`;
+  }
+
+  initIcons();
+}
+
+function resetPaymentProgress() {
+  const progressBox = document.getElementById("payment-progress-box");
+  const payBtn = document.getElementById("pay-booking-fee-btn");
+  const errorBox = document.getElementById("payment-error-box");
+
+  if (progressBox) progressBox.classList.add("hidden");
+  if (errorBox) errorBox.classList.add("hidden");
+  if (payBtn) payBtn.classList.remove("hidden");
+}
+
+async function executeBlockchainPayment() {
+  const r = state.selectedRestaurant;
+  if (!r) return;
+
+  if (!state.wallet.isConnected) {
+    showToast("Please connect your wallet first", "warning");
+    return;
+  }
+
+  const progressBox = document.getElementById("payment-progress-box");
+  const progressStepText = document.getElementById("payment-step-text");
+  const progressStepSub = document.getElementById("payment-step-sub");
+  const payBtn = document.getElementById("pay-booking-fee-btn");
+  const errorBox = document.getElementById("payment-error-box");
+
+  payBtn.classList.add("hidden");
+  progressBox.classList.remove("hidden");
+  errorBox.classList.add("hidden");
+
+  try {
+    // 1. Initial reservation slot allocation
+    progressStepText.innerText = "Connecting Wallet...";
+    progressStepSub.innerText = "Checking table availability and allocating reservation slot...";
+
+    const createData = await apiRequest("/api/reservations", "POST", {
+      restaurant_id: r.id,
+      table_id: state.bookingDraft.tableId,
+      customer_name: state.bookingDraft.customerName,
+      customer_email: state.bookingDraft.customerEmail,
+      customer_phone: state.bookingDraft.customerPhone,
+      reservation_date: state.bookingDraft.date,
+      reservation_time: state.bookingDraft.time,
+      guest_count: state.bookingDraft.guestCount,
+      special_requests: state.bookingDraft.specialRequests,
+      wallet_address: state.wallet.address,
+      payment_status: "Pending Payment",
+      booking_status: "Pending Payment"
+    });
+
+    if (!createData.success) {
+      throw new Error(createData.error || "Failed to create reservation slot");
+    }
+
+    const booking = createData.booking;
+    const bookingId = booking.booking_id;
+
+    // 2. Waiting for MetaMask Confirmation
+    progressStepText.innerText = "Waiting for MetaMask Confirmation...";
+    progressStepSub.innerText = "Please confirm the transaction prompt in your MetaMask wallet extension.";
+
+    const checkoutStatusEl = document.getElementById("checkout-booking-status-text");
+    const checkoutBadgeEl = document.getElementById("checkout-booking-status");
+    if (checkoutStatusEl) checkoutStatusEl.innerText = "Payment Processing...";
+    if (checkoutBadgeEl) {
+      checkoutBadgeEl.className = "px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-purple-950/60 text-purple-300 border border-purple-500/40 flex items-center";
+    }
+
+    let txHash = "";
+    const isRealMetaMask = (typeof window.ethereum !== "undefined" && !state.wallet.isDemoSimulated);
+
+    if (isRealMetaMask) {
+      try {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const feeInWei = ethers.parseEther(r.booking_fee.toString());
+        const targetWallet = safeChecksumAddress(r.wallet_address);
+
+        const tx = await signer.sendTransaction({
+          to: targetWallet,
+          value: feeInWei,
+          data: ethers.hexlify(ethers.toUtf8Bytes(`TableChain:${bookingId}`))
+        });
+
+        // 3. Processing Blockchain Payment
+        progressStepText.innerText = "Processing Blockchain Payment...";
+        progressStepSub.innerText = `Transaction broadcasted to Sepolia network: ${shortenAddress(tx.hash)}. Awaiting block inclusion...`;
+        txHash = tx.hash;
+
+        // 4. Confirming Transaction
+        progressStepText.innerText = "Confirming Transaction on Sepolia...";
+        progressStepSub.innerText = "Waiting for 1 block confirmation...";
+        await tx.wait(1);
+
+      } catch (metaMaskErr) {
+        if (metaMaskErr.code === "ACTION_REJECTED" || metaMaskErr.code === 4001) {
+          throw new Error("Transaction was rejected in MetaMask by user.");
+        } else {
+          console.warn("MetaMask transaction error:", metaMaskErr);
+          throw new Error(metaMaskErr.message || "MetaMask transaction failed.");
+        }
+      }
+    } else {
+      // Interactive Demo Simulation Mode
+      await delay(1200);
+      progressStepText.innerText = "Processing Blockchain Payment...";
+      progressStepSub.innerText = "Transaction broadcasted to Ethereum Sepolia Testnet nodes...";
+      await delay(1500);
+
+      txHash = "0x" + Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join("");
+      
+      progressStepText.innerText = "Confirming Transaction on Sepolia...";
+      progressStepSub.innerText = `Tx Hash: ${shortenAddress(txHash)} confirmed in Block #5892147`;
+      await delay(1200);
+    }
+
+    // 5. Booking Confirmed
+    progressStepText.innerText = "Booking Confirmed!";
+    progressStepSub.innerText = "Recording verified on-chain payment proof in TableChain database...";
+
+    if (checkoutStatusEl) checkoutStatusEl.innerText = "Confirmed";
+    if (checkoutBadgeEl) {
+      checkoutBadgeEl.className = "px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-950/60 text-emerald-300 border border-emerald-500/40 flex items-center";
+    }
+
+    const updateData = await apiRequest(`/api/reservations/${bookingId}`, "PATCH", {
+      payment_status: "Confirmed",
+      booking_status: "Confirmed",
+      transaction_hash: txHash,
+      wallet_address: state.wallet.address
+    });
+
+    const finalBooking = updateData.booking || booking;
+    finalBooking.transaction_hash = txHash;
+    finalBooking.payment_status = "Confirmed";
+    finalBooking.booking_status = "Confirmed";
+    state.lastConfirmedBooking = finalBooking;
+
+    // Add to blockchain event feed
+    state.blockchainEvents.unshift({
+      txHash: txHash,
+      bookingId: bookingId,
+      customer: state.wallet.address,
+      restaurant: r.wallet_address,
+      amount: `${r.booking_fee} ETH`,
+      time: "Just now",
+      type: "BookingPaid"
+    });
+
+    closeModal("checkout-modal");
+    triggerConfetti();
+    showBookingConfirmation(finalBooking);
+
+  } catch (err) {
+    console.error("Payment flow error:", err);
+    progressBox.classList.add("hidden");
+    payBtn.classList.remove("hidden");
+    errorBox.classList.remove("hidden");
+    document.getElementById("payment-error-message").innerText = err.message || "An unexpected error occurred during blockchain payment.";
+  }
+}
+
+function switchAndPayWithDemo() {
+  state.wallet.isDemoSimulated = true;
+  executeBlockchainPayment();
+}
+
+function delay(ms) {
+  return new Promise(res => setTimeout(res, ms));
+}
+
+function triggerConfetti() {
+  if (typeof confetti === "function") {
+    confetti({
+      particleCount: 80,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#D4AF37', '#E5C378', '#F8F5EE', '#8F764D']
+    });
+  }
+}
+
+// ================= BOOKING CONFIRMATION VIEW ================= //
+
+function showBookingConfirmation(booking) {
+  document.getElementById("confirm-booking-id").innerText = booking.booking_id;
+  document.getElementById("confirm-restaurant-name").innerText = booking.restaurant_name || state.selectedRestaurant.name;
+  document.getElementById("confirm-date").innerText = booking.reservation_date;
+  document.getElementById("confirm-time").innerText = booking.reservation_time;
+  document.getElementById("confirm-guests").innerText = `${booking.guest_count} Guests`;
+  document.getElementById("confirm-fee").innerText = `${booking.booking_fee} ETH (≈ ${(booking.booking_fee * ETH_TO_THB_RATE).toLocaleString()} THB)`;
+  document.getElementById("confirm-wallet").innerText = shortenAddress(booking.wallet_address);
+  document.getElementById("confirm-tx-hash").innerText = shortenAddress(booking.transaction_hash);
+
+  // Dynamic Status Displays
+  const bookingStatusText = document.getElementById("confirm-booking-status-text");
+  if (bookingStatusText) {
+    bookingStatusText.innerText = booking.booking_status || "Confirmed";
+  }
+
+  const paymentStatusText = document.getElementById("confirm-payment-status-text");
+  if (paymentStatusText) {
+    paymentStatusText.innerText = booking.payment_status === "Confirmed" ? "Blockchain Confirmed" : (booking.payment_status || "Confirmed");
+  }
+
+  const gridBookingStatus = document.getElementById("confirm-grid-booking-status");
+  if (gridBookingStatus) {
+    gridBookingStatus.innerHTML = `● ${booking.booking_status || "Confirmed"} (ยืนยันเรียบร้อย)`;
+  }
+
+  const gridPaymentStatus = document.getElementById("confirm-grid-payment-status");
+  if (gridPaymentStatus) {
+    gridPaymentStatus.innerHTML = `● ${booking.payment_status || "Confirmed"} (ชำระผ่าน Sepolia สำเร็จ)`;
+  }
+
+  const txLink = document.getElementById("confirm-etherscan-link");
+  if (txLink) {
+    txLink.href = `https://sepolia.etherscan.io/tx/${booking.transaction_hash}`;
+  }
+
+  const qrContainer = document.getElementById("confirm-qrcode");
+  if (qrContainer && typeof QRCode !== "undefined") {
+    qrContainer.innerHTML = "";
+    new QRCode(qrContainer, {
+      text: `TABLECHAIN:${booking.booking_id}:${booking.transaction_hash}`,
+      width: 140,
+      height: 140,
+      colorDark: "#151518",
+      colorLight: "#F8F5EE",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+  }
+
+  navigateTo("confirmation");
+}
+
+function copyConfirmationBookingId() {
+  if (state.lastConfirmedBooking) {
+    navigator.clipboard.writeText(state.lastConfirmedBooking.booking_id);
+    showToast("Booking ID copied to clipboard!", "success");
+  }
+}
+
+function copyConfirmationTxHash() {
+  if (state.lastConfirmedBooking) {
+    navigator.clipboard.writeText(state.lastConfirmedBooking.transaction_hash);
+    showToast("Transaction hash copied to clipboard!", "success");
+  }
+}
+
+// ================= MY RESERVATIONS VIEW ================= //
+
+let currentMyBookingsTab = "upcoming";
+
+async function loadMyReservations() {
+  const container = document.getElementById("my-bookings-container");
+  if (!container) return;
+
+  const walletAddr = state.wallet.address || "";
+  container.innerHTML = `
+    <div class="py-16 text-center text-stone-500">
+      <svg class="animate-spin h-8 w-8 mx-auto text-[#C5A880] mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+      </svg>
+      <p class="text-sm">Retrieving reservations from TableChain database...</p>
+    </div>
+  `;
+
+  try {
+    const url = walletAddr ? `/api/reservations?wallet=${walletAddr}` : `/api/reservations`;
+    const data = await apiRequest(url);
+
+    if (!data.success) throw new Error("Failed to fetch reservations");
+    renderMyReservations(data.reservations || []);
+  } catch (err) {
+    console.error("Error loading my reservations:", err);
+    container.innerHTML = `
+      <div class="p-8 text-center text-rose-400">
+        <p>Failed to load reservations.</p>
+      </div>
+    `;
+  }
+}
+
+function switchMyBookingsTab(tabName) {
+  currentMyBookingsTab = tabName;
+  document.querySelectorAll(".booking-tab-btn").forEach(btn => {
+    if (btn.dataset.tab === tabName) {
+      btn.classList.add("border-[#E5C378]", "text-[#E5C378]");
+      btn.classList.remove("border-transparent", "text-stone-400");
+    } else {
+      btn.classList.remove("border-[#E5C378]", "text-[#E5C378]");
+      btn.classList.add("border-transparent", "text-stone-400");
+    }
+  });
+
+  loadMyReservations();
+}
+
+function renderMyReservations(reservations) {
+  const container = document.getElementById("my-bookings-container");
+  if (!container) return;
+
+  const filtered = reservations.filter(r => {
+    if (currentMyBookingsTab === "upcoming") {
+      return (r.booking_status === "Confirmed" || r.booking_status === "Pending Payment");
+    } else if (currentMyBookingsTab === "completed") {
+      return (r.booking_status === "Completed");
+    } else if (currentMyBookingsTab === "cancelled") {
+      return (r.booking_status === "Cancelled" || r.booking_status === "No-show");
+    }
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div class="py-16 text-center glass-panel rounded-2xl p-8 border border-stone-800">
+        <i data-lucide="calendar-x" class="w-12 h-12 mx-auto text-stone-600 mb-3"></i>
+        <h4 class="text-base font-serif text-stone-300">No ${currentMyBookingsTab} reservations found</h4>
+        <p class="text-xs text-stone-500 mt-1 max-w-sm mx-auto">Explore our curated fine-dining establishments and book your table with blockchain transparency.</p>
+        <button onclick="navigateTo('restaurants')" class="mt-4 px-5 py-2 rounded-lg gold-button text-xs font-semibold">
+          Find a Restaurant
+        </button>
+      </div>
+    `;
+    initIcons();
+    return;
+  }
+
+  container.innerHTML = filtered.map(r => `
+    <div class="glass-panel p-5 rounded-2xl border border-stone-800/80 hover:border-[#C5A880]/30 transition-all flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div class="flex items-center gap-4">
+        <img src="${r.restaurant_image || 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=300'}" 
+             class="w-20 h-20 rounded-xl object-cover border border-stone-800" />
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-mono text-[#E5C378] font-bold">${r.booking_id}</span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full ${getStatusBadgeClass(r.booking_status)} font-medium">
+              ${r.booking_status}
+            </span>
+          </div>
+          <h4 class="text-lg font-serif font-bold text-stone-100 mt-0.5">${r.restaurant_name}</h4>
+          <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-stone-400 mt-1.5">
+            <span class="flex items-center"><i data-lucide="calendar" class="w-3.5 h-3.5 mr-1 text-stone-500"></i> ${r.reservation_date}</span>
+            <span class="flex items-center"><i data-lucide="clock" class="w-3.5 h-3.5 mr-1 text-stone-500"></i> ${r.reservation_time}</span>
+            <span class="flex items-center"><i data-lucide="users" class="w-3.5 h-3.5 mr-1 text-stone-500"></i> ${r.guest_count} Guests</span>
+            <span class="flex items-center text-amber-300 font-mono"><i data-lucide="shield-check" class="w-3.5 h-3.5 mr-1"></i> ${r.booking_fee} ETH</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-end sm:items-center gap-2.5 w-full md:w-auto border-t md:border-t-0 pt-3 md:pt-0 border-stone-800">
+        ${r.transaction_hash ? `
+          <a href="https://sepolia.etherscan.io/tx/${r.transaction_hash}" target="_blank" 
+             class="text-xs text-purple-300 hover:text-purple-200 flex items-center bg-purple-950/40 px-3 py-1.5 rounded-lg border border-purple-500/30">
+            <i data-lucide="external-link" class="w-3.5 h-3.5 mr-1"></i>
+            Tx: ${shortenAddress(r.transaction_hash)}
+          </a>
+        ` : ''}
+        <button onclick="openBookingDetailModal('${r.booking_id}')" 
+                class="px-4 py-2 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold transition-colors">
+          View Reservation
+        </button>
+      </div>
+    </div>
+  `).join("");
+
+  initIcons();
+}
+
+function getStatusBadgeClass(status) {
+  switch (status) {
+    case "Confirmed":
+      return "bg-emerald-950/60 text-emerald-400 border border-emerald-500/30";
+    case "Pending Payment":
+      return "bg-amber-950/60 text-amber-400 border border-amber-500/30";
+    case "Payment Processing":
+      return "bg-purple-950/60 text-purple-400 border border-purple-500/30";
+    case "Completed":
+      return "bg-blue-950/60 text-blue-400 border border-blue-500/30";
+    case "Cancelled":
+      return "bg-rose-950/60 text-rose-400 border border-rose-500/30";
+    case "No-show":
+      return "bg-stone-800 text-stone-400 border border-stone-700";
+    default:
+      return "bg-stone-800 text-stone-300";
+  }
+}
+
+async function openBookingDetailModal(bookingId) {
+  try {
+    const data = await apiRequest(`/api/reservations?booking_id=${bookingId}`);
+    if (!data.success || data.reservations.length === 0) return;
+
+    const b = data.reservations[0];
+    document.getElementById("modal-booking-id").innerText = b.booking_id;
+    document.getElementById("modal-booking-status").innerText = b.booking_status;
+    document.getElementById("modal-booking-status").className = `text-xs px-2.5 py-0.5 rounded-full font-medium ${getStatusBadgeClass(b.booking_status)}`;
+    document.getElementById("modal-restaurant-name").innerText = b.restaurant_name;
+    document.getElementById("modal-date-time").innerText = `${b.reservation_date} at ${b.reservation_time}`;
+    document.getElementById("modal-guests").innerText = `${b.guest_count} Guests (${b.table_number || 'Standard Table'})`;
+    document.getElementById("modal-fee").innerText = `${b.booking_fee} ETH`;
+    document.getElementById("modal-wallet").innerText = shortenAddress(b.wallet_address);
+    document.getElementById("modal-tx-hash").innerText = b.transaction_hash ? shortenAddress(b.transaction_hash) : "None";
+
+    const modalEtherscan = document.getElementById("modal-etherscan-link");
+    if (modalEtherscan) {
+      if (b.transaction_hash) {
+        modalEtherscan.href = `https://sepolia.etherscan.io/tx/${b.transaction_hash}`;
+        modalEtherscan.classList.remove("hidden");
+      } else {
+        modalEtherscan.classList.add("hidden");
+      }
+    }
+
+    const qrContainer = document.getElementById("modal-qrcode");
+    if (qrContainer && typeof QRCode !== "undefined") {
+      qrContainer.innerHTML = "";
+      new QRCode(qrContainer, {
+        text: `TABLECHAIN:${b.booking_id}:${b.transaction_hash || 'PENDING'}`,
+        width: 120,
+        height: 120,
+        colorDark: "#151518",
+        colorLight: "#F8F5EE",
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    }
+
+    const cancelBtn = document.getElementById("modal-cancel-booking-btn");
+    if (cancelBtn) {
+      if (b.booking_status === "Confirmed" || b.booking_status === "Pending Payment") {
+        cancelBtn.classList.remove("hidden");
+        cancelBtn.onclick = () => cancelCustomerReservation(b.booking_id);
+      } else {
+        cancelBtn.classList.add("hidden");
+      }
+    }
+
+    const modal = document.getElementById("booking-detail-modal");
+    if (modal) modal.classList.remove("hidden");
+    initIcons();
+  } catch (err) {
+    console.error("Error opening booking detail:", err);
+  }
+}
+
+async function cancelCustomerReservation(bookingId) {
+  if (!confirm(`Are you sure you want to cancel reservation ${bookingId}? If cancelled 4 hours prior, your booking fee will be returned.`)) {
+    return;
+  }
+
+  try {
+    const data = await apiRequest(`/api/reservations/${bookingId}`, "PATCH", {
+      booking_status: "Cancelled",
+      payment_status: "Refunded"
+    });
+    if (data.success) {
+      showToast(`Reservation ${bookingId} cancelled. Booking fee refunded.`, "info");
+      closeModal("booking-detail-modal");
+      loadMyReservations();
+    }
+  } catch (err) {
+    showToast("Failed to cancel reservation", "error");
+  }
+}
+
+// ================= RESTAURANT ADMIN DASHBOARD ================= //
+
+function populateAdminRestaurantSelect() {
+  const select = document.getElementById("admin-restaurant-select");
+  if (!select) return;
+
+  select.innerHTML = state.restaurants.map(r => `
+    <option value="${r.id}" ${r.id === state.admin.selectedRestaurantId ? 'selected' : ''}>
+      ${r.name} (${r.location})
+    </option>
+  `).join("");
+
+  select.onchange = (e) => {
+    state.admin.selectedRestaurantId = parseInt(e.target.value);
+    loadAdminData(state.admin.selectedRestaurantId);
+  };
+}
+
+function renderAdminDashboard() {
+  const s = state.admin.stats;
+  
+  document.getElementById("kpi-today-count").innerText = s.today_reservations || 0;
+  document.getElementById("kpi-confirmed-count").innerText = s.confirmed_bookings || 0;
+  document.getElementById("kpi-pending-count").innerText = s.pending_payments || 0;
+  document.getElementById("kpi-revenue-eth").innerText = `${s.total_revenue_eth || 0} ETH`;
+  document.getElementById("kpi-revenue-thb").innerText = `≈ ${(s.total_revenue_thb || 0).toLocaleString()} THB`;
+  document.getElementById("kpi-avail-tables").innerText = s.available_tables || 0;
+
+  renderAdminReservationsTable();
+  renderAdminTablesList();
+}
+
+function renderAdminReservationsTable() {
+  const tbody = document.getElementById("admin-reservations-tbody");
+  if (!tbody) return;
+
+  const list = state.admin.reservations;
+  if (list.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="10" class="py-8 text-center text-xs text-stone-500">No reservations found for this restaurant.</td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = list.map(r => `
+    <tr class="border-b border-stone-800/80 hover:bg-stone-900/40 text-xs">
+      <td class="py-3 px-3 font-mono font-bold text-[#E5C378]">${r.booking_id}</td>
+      <td class="py-3 px-3 text-stone-200">
+        <div>${r.customer_name || 'Anonymous'}</div>
+        <div class="text-[10px] text-stone-500">${r.customer_phone || ''}</div>
+      </td>
+      <td class="py-3 px-3 font-mono text-stone-400">${shortenAddress(r.wallet_address)}</td>
+      <td class="py-3 px-3 text-stone-300">${r.guest_count} (${r.table_number || 'T01'})</td>
+      <td class="py-3 px-3 text-stone-300">${r.reservation_date}</td>
+      <td class="py-3 px-3 text-stone-300 font-mono">${r.reservation_time}</td>
+      <td class="py-3 px-3 text-amber-300 font-mono">${r.booking_fee} ETH</td>
+      <td class="py-3 px-3">
+        <span class="px-2 py-0.5 rounded-full text-[10px] font-medium ${r.payment_status === 'Confirmed' ? 'bg-emerald-950/60 text-emerald-400 border border-emerald-500/30' : 'bg-amber-950/60 text-amber-400'}">
+          ${r.payment_status}
+        </span>
+      </td>
+      <td class="py-3 px-3">
+        <span class="px-2 py-0.5 rounded-full text-[10px] font-medium ${getStatusBadgeClass(r.booking_status)}">
+          ${r.booking_status}
+        </span>
+      </td>
+      <td class="py-3 px-3 text-right">
+        <div class="flex items-center justify-end space-x-1">
+          ${r.booking_status === 'Confirmed' ? `
+            <button onclick="updateBookingStatus('${r.booking_id}', 'Completed')" title="Confirm Arrival & Mark Completed" class="p-1 rounded hover:bg-stone-800 text-emerald-400">
+              <i data-lucide="check-check" class="w-4 h-4"></i>
+            </button>
+            <button onclick="updateBookingStatus('${r.booking_id}', 'No-show')" title="Mark No-show" class="p-1 rounded hover:bg-stone-800 text-stone-400">
+              <i data-lucide="user-x" class="w-4 h-4"></i>
+            </button>
+            <button onclick="updateBookingStatus('${r.booking_id}', 'Cancelled')" title="Cancel Reservation" class="p-1 rounded hover:bg-stone-800 text-rose-400">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          ` : ''}
+          ${r.transaction_hash ? `
+            <a href="https://sepolia.etherscan.io/tx/${r.transaction_hash}" target="_blank" title="View Blockchain Tx on Sepolia Etherscan" class="p-1 rounded hover:bg-stone-800 text-purple-300">
+              <i data-lucide="external-link" class="w-4 h-4"></i>
+            </a>
+          ` : ''}
+        </div>
+      </td>
+    </tr>
+  `).join("");
+
+  initIcons();
+}
+
+async function updateBookingStatus(bookingId, newStatus) {
+  try {
+    const data = await apiRequest(`/api/reservations/${bookingId}`, "PATCH", { booking_status: newStatus });
+    if (data.success) {
+      showToast(`Reservation ${bookingId} updated to ${newStatus}`, "success");
+      loadAdminData(state.admin.selectedRestaurantId);
+    }
+  } catch (err) {
+    showToast("Failed to update status", "error");
+  }
+}
+
+// ================= TABLE MANAGEMENT ================= //
+
+function renderAdminTablesList() {
+  const container = document.getElementById("admin-tables-grid");
+  if (!container) return;
+
+  const tables = state.admin.tables;
+  container.innerHTML = tables.map(t => `
+    <div class="p-4 rounded-xl glass-panel border border-stone-800 flex justify-between items-center">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="font-serif font-bold text-stone-200 text-sm">${t.table_number}</span>
+          <span class="text-[10px] text-stone-400 px-2 py-0.5 rounded bg-stone-900 border border-stone-800">
+            ${t.capacity} Guests
+          </span>
+        </div>
+        <span class="text-xs ${getTableStatusColor(t.status)} font-medium mt-1 block">
+          ● ${t.status}
+        </span>
+      </div>
+      <div>
+        <select onchange="changeTableStatus(${t.id}, this.value)" class="text-xs bg-stone-900 border border-stone-700 rounded-lg px-2.5 py-1.5 text-stone-300 focus:outline-none focus:border-[#C5A880]">
+          <option value="Available" ${t.status === 'Available' ? 'selected' : ''}>Available</option>
+          <option value="Reserved" ${t.status === 'Reserved' ? 'selected' : ''}>Reserved</option>
+          <option value="Occupied" ${t.status === 'Occupied' ? 'selected' : ''}>Occupied</option>
+          <option value="Cleaning" ${t.status === 'Cleaning' ? 'selected' : ''}>Cleaning</option>
+          <option value="Unavailable" ${t.status === 'Unavailable' ? 'selected' : ''}>Unavailable</option>
+        </select>
+      </div>
+    </div>
+  `).join("");
+}
+
+function getTableStatusColor(status) {
+  switch (status) {
+    case "Available": return "text-emerald-400";
+    case "Reserved": return "text-purple-400";
+    case "Occupied": return "text-amber-400";
+    case "Cleaning": return "text-blue-400";
+    case "Unavailable": return "text-stone-500";
+    default: return "text-stone-300";
+  }
+}
+
+async function changeTableStatus(tableId, newStatus) {
+  try {
+    const data = await apiRequest(`/api/tables/${tableId}`, "PATCH", { status: newStatus });
+    if (data.success) {
+      showToast("Table status updated", "success");
+      loadAdminData(state.admin.selectedRestaurantId);
+    }
+  } catch (err) {
+    showToast("Failed to update table status", "error");
+  }
+}
+
+function openAddTableModal() {
+  const modal = document.getElementById("add-table-modal");
+  if (modal) modal.classList.remove("hidden");
+}
+
+async function handleAddNewTable(e) {
+  e.preventDefault();
+  const numInput = document.getElementById("new-table-number");
+  const capInput = document.getElementById("new-table-capacity");
+  const statusInput = document.getElementById("new-table-status");
+
+  if (!numInput.value) return;
+
+  try {
+    const data = await apiRequest("/api/tables", "POST", {
+      restaurant_id: state.admin.selectedRestaurantId,
+      table_number: numInput.value.trim(),
+      capacity: parseInt(capInput.value),
+      status: statusInput.value
+    });
+
+    if (data.success) {
+      showToast(`Table ${numInput.value} created successfully`, "success");
+      closeModal("add-table-modal");
+      numInput.value = "";
+      loadAdminData(state.admin.selectedRestaurantId);
+    } else {
+      showToast(data.error || "Failed to create table", "error");
+    }
+  } catch (err) {
+    showToast("Error creating table", "error");
+  }
+}
+
+// ================= SMART CONTRACT & BLOCKCHAIN EVENTS ================= //
+
+function renderBlockchainEvents() {
+  const container = document.getElementById("blockchain-events-container");
+  if (!container) return;
+
+  container.innerHTML = state.blockchainEvents.map(evt => `
+    <div class="p-4 rounded-xl bg-stone-900/60 border border-stone-800 flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs px-2 py-0.5 rounded bg-purple-950/60 text-purple-300 border border-purple-500/30 font-mono font-semibold">
+            ${evt.type}
+          </span>
+          <span class="text-xs font-mono text-[#E5C378] font-bold">${evt.bookingId}</span>
+          <span class="text-[10px] text-stone-500">${evt.time}</span>
+        </div>
+        <div class="text-xs text-stone-400 mt-1.5 flex flex-wrap gap-x-4">
+          <span>Payer: <span class="font-mono text-stone-300">${shortenAddress(evt.customer)}</span></span>
+          <span>Recipient: <span class="font-mono text-stone-300">${shortenAddress(evt.restaurant)}</span></span>
+          <span>Fee: <span class="text-amber-300 font-semibold">${evt.amount}</span></span>
+        </div>
+      </div>
+      <div>
+        <a href="https://sepolia.etherscan.io/tx/${evt.txHash}" target="_blank" 
+           class="inline-flex items-center text-xs text-stone-400 hover:text-[#E5C378] font-mono bg-stone-800/80 px-2.5 py-1 rounded-md border border-stone-700">
+          <i data-lucide="external-link" class="w-3 h-3 mr-1"></i>
+          ${shortenAddress(evt.txHash)}
+        </a>
+      </div>
+    </div>
+  `).join("");
+
+  initIcons();
+}
+
+// ================= MODAL & UTILITY FUNCTIONS ================= //
+
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) modal.classList.add("hidden");
+}
+
+function showToast(message, type = "info") {
+  const toastContainer = document.getElementById("toast-container");
+  if (!toastContainer) return;
+
+  const toast = document.createElement("div");
+  let bg = "bg-stone-900 border-[#C5A880]/40 text-stone-200";
+  let icon = "info";
+
+  if (type === "success") {
+    bg = "bg-stone-900 border-emerald-500/50 text-emerald-300";
+    icon = "check-circle";
+  } else if (type === "error") {
+    bg = "bg-stone-900 border-rose-500/50 text-rose-300";
+    icon = "alert-octagon";
+  } else if (type === "warning") {
+    bg = "bg-stone-900 border-amber-500/50 text-amber-300";
+    icon = "alert-triangle";
+  }
+
+  toast.className = `flex items-center px-4 py-3 rounded-xl border shadow-xl transition-all duration-300 transform translate-y-2 opacity-0 text-xs sm:text-sm font-medium ${bg}`;
+  toast.innerHTML = `
+    <i data-lucide="${icon}" class="w-4 h-4 mr-2.5 flex-shrink-0"></i>
+    <span>${message}</span>
+  `;
+
+  toastContainer.appendChild(toast);
+  initIcons();
+
+  requestAnimationFrame(() => {
+    toast.classList.remove("translate-y-2", "opacity-0");
+  });
+
+  setTimeout(() => {
+    toast.classList.add("opacity-0", "translate-y-2");
+    setTimeout(() => toast.remove(), 300);
+  }, 4000);
+}
+
+// Reset Demo Data
+async function resetDemoData() {
+  if (!confirm("Reset database to clean initial state with demo data?")) return;
+  try {
+    const data = await apiRequest("/api/reset-demo", "POST");
+    if (data.success) {
+      showToast("Demo database successfully reset!", "success");
+      await loadRestaurants();
+      if (state.view === "admin") loadAdminData(state.admin.selectedRestaurantId);
+      if (state.view === "my-bookings") loadMyReservations();
+    }
+  } catch (err) {
+    showToast("Failed to reset demo data", "error");
+  }
+}
+
+</script>
+</body>
+</html>
