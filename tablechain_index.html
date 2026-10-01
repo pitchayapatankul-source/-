@@ -1062,13 +1062,13 @@ body {
         
         <div class="glass-panel p-4 rounded-xl border border-stone-800">
           <span class="text-[10px] text-stone-500 uppercase tracking-wider block">Contract Name</span>
-          <span class="text-sm font-bold text-stone-200 font-mono block mt-1">TableChainBooking.sol</span>
-          <span class="text-[11px] text-emerald-400 mt-1 block">Solidity ^0.8.20</span>
+          <span class="text-sm font-bold text-stone-200 font-mono block mt-1">TableChain.sol</span>
+          <span class="text-[11px] text-emerald-400 mt-1 block">Solidity ^0.8.19</span>
         </div>
 
         <div class="glass-panel p-4 rounded-xl border border-stone-800">
           <span class="text-[10px] text-stone-500 uppercase tracking-wider block">Sepolia Deployment</span>
-          <span class="text-xs font-mono text-purple-300 block mt-1">0x8a9947816C68564016b3fE9392e6d5bA8a45e997</span>
+          <span class="text-xs font-mono text-purple-300 block mt-1 font-bold">0x9Ed823300d2418f07D25094Cfe0831DC9Dd92596</span>
           <span class="text-[11px] text-stone-400 mt-1 block">Chain ID: 11155111</span>
         </div>
 
@@ -1098,50 +1098,32 @@ body {
       <!-- Solidity Code Snippet Display -->
       <div class="glass-panel p-6 rounded-2xl border border-stone-800">
         <h3 class="text-base font-serif font-bold text-stone-100 mb-2">Solidity Source Code Preview</h3>
-        <p class="text-xs text-stone-400 mb-4">Located at <code class="text-amber-300 bg-stone-900 px-1 py-0.5 rounded">contracts/TableChainBooking.sol</code></p>
+        <p class="text-xs text-stone-400 mb-4">Deployed on Sepolia Testnet</p>
         
         <pre class="bg-stone-950 p-4 rounded-xl border border-stone-800/80 text-[11px] text-stone-300 font-mono overflow-x-auto leading-relaxed max-h-96">
 <code>// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.19;
 
-contract TableChainBooking {
-    struct Booking {
-        string bookingId;
-        address customer;
-        address payable restaurantWallet;
-        uint256 amount;
-        uint256 timestamp;
-        PaymentStatus status;
-        bool exists;
-    }
+contract TableChain {
+    address payable public restaurantWallet;
 
     event BookingPaid(
-        string indexed bookingIdIndexed,
         string bookingId,
-        address indexed customerWallet,
-        address indexed restaurantWallet,
+        address customerWallet,
         uint256 amount,
         uint256 timestamp
     );
 
-    function payBookingFee(
-        string calldata bookingId,
-        address payable restaurantWallet
-    ) external payable {
-        require(msg.value > 0, "Booking fee must be > 0");
-        require(!bookings[bookingId].exists, "Booking already paid");
+    constructor() {
+        restaurantWallet = payable(msg.sender);
+    }
 
-        bookings[bookingId] = Booking({
-            bookingId: bookingId,
-            customer: msg.sender,
-            restaurantWallet: restaurantWallet,
-            amount: msg.value,
-            timestamp: block.timestamp,
-            status: PaymentStatus.Paid,
-            exists: true
-        });
+    function payBookingFee(string memory bookingId) public payable {
+        require(msg.value > 0, "Booking fee must be greater than 0");
 
-        emit BookingPaid(bookingId, bookingId, msg.sender, restaurantWallet, msg.value, block.timestamp);
+        restaurantWallet.transfer(msg.value);
+
+        emit BookingPaid(bookingId, msg.sender, msg.value, block.timestamp);
     }
 }</code>
         </pre>
@@ -1214,8 +1196,8 @@ contract TableChainBooking {
             <span id="checkout-network" class="font-medium text-purple-300 mt-0.5 block">Ethereum / Sepolia</span>
           </div>
           <div class="p-3 rounded-lg bg-stone-900/60 border border-stone-800">
-            <span class="text-[10px] text-stone-500 block">Restaurant Wallet</span>
-            <span id="checkout-restaurant-wallet" class="font-mono text-stone-300 mt-0.5 block">0x91F5...9E41</span>
+            <span class="text-[10px] text-stone-500 block">Smart Contract Address</span>
+            <span id="checkout-restaurant-wallet" class="font-mono text-amber-300 mt-0.5 block">0x9Ed8...2596</span>
           </div>
         </div>
 
@@ -1436,13 +1418,81 @@ contract TableChainBooking {
 /**
  * TableChain Application Core
  * Full-stack Restaurant Table Booking with MetaMask Web3 Integration
- * Supports both Live Python REST API and client-side fallback persistence.
  */
 
 // Configuration & Constants
 const SEPOLIA_CHAIN_ID_HEX = "0xaa36a7"; // 11155111
 const SEPOLIA_CHAIN_ID_DEC = 11155111;
-const PLATFORM_CONTRACT_ADDRESS = "0x8a9947816C68564016b3Fe9392E6d5bA8a45E997";
+
+// Updated Smart Contract Address from Remix
+const PLATFORM_CONTRACT_ADDRESS = "0x9Ed823300d2418f07D25094Cfe0831DC9Dd92596";
+
+// Updated ABI from Remix
+const TABLECHAIN_ABI = [
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "bookingId",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "customerWallet",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "BookingPaid",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "bookingId",
+        "type": "string"
+      }
+    ],
+    "name": "payBookingFee",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "restaurantWallet",
+    "outputs": [
+      {
+        "internalType": "address payable",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+];
+
 const ETH_TO_THB_RATE = 125000;
 
 // Safe address checksum helper to guarantee 100% compliance with EIP-55
@@ -1458,7 +1508,7 @@ function safeChecksumAddress(addr) {
   return addr;
 }
 
-// Default Seed Data (used as fallback if backend is offline or opened via file://)
+// Default Seed Data
 const SEED_RESTAURANTS = [
   {
     id: 1,
@@ -1619,54 +1669,6 @@ const SEED_RESERVATIONS = [
     booking_status: "Confirmed",
     special_requests: "Anniversary celebration. Quiet table requested.",
     created_at: new Date().toISOString()
-  },
-  {
-    id: 2,
-    booking_id: "TC-20261011-00142",
-    restaurant_id: 2,
-    restaurant_name: "Nara Dining",
-    restaurant_location: "Chiang Mai, Nimman",
-    restaurant_cuisine: "Thai Contemporary",
-    restaurant_image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800&auto=format&fit=crop",
-    table_id: 10,
-    table_number: "Table T04",
-    customer_name: "Sarah Jenkins",
-    customer_email: "s.jenkins@web3ventures.io",
-    customer_phone: "+66 89 876 5432",
-    reservation_date: new Date(Date.now() + 86400000).toISOString().split("T")[0],
-    reservation_time: "18:30",
-    guest_count: 6,
-    booking_fee: 0.0015,
-    wallet_address: "0x9965507D1a55bcC2695c58bA16Fb37d819b0a4df",
-    transaction_hash: "0x42f88a9c80d461715fbc705a61a498b2ef82b681816f08e49d63259a4192b0c1",
-    payment_status: "Confirmed",
-    booking_status: "Confirmed",
-    special_requests: "Vegan options for two guests.",
-    created_at: new Date().toISOString()
-  },
-  {
-    id: 3,
-    booking_id: "TC-20261009-00098",
-    restaurant_id: 3,
-    restaurant_name: "Sakura House",
-    restaurant_location: "Chiang Mai, Riverside",
-    restaurant_cuisine: "Japanese Kaiseki & Sushi",
-    restaurant_image: "https://images.unsplash.com/photo-1579027989536-b7b1f875659b?q=80&w=800&auto=format&fit=crop",
-    table_id: 16,
-    table_number: "Tatami Room 02",
-    customer_name: "Nattawut Somchai",
-    customer_email: "nattawut.s@techinnovate.th",
-    customer_phone: "+66 82 555 1212",
-    reservation_date: new Date(Date.now() - 86400000).toISOString().split("T")[0],
-    reservation_time: "19:30",
-    guest_count: 4,
-    booking_fee: 0.0025,
-    wallet_address: "0x3C44CDDdB6A900fa2B585dD299e03D12Fa4293Bc",
-    transaction_hash: "0x15b76c8c4a169828456209ef78da9142ec0176884638a2e1d71953267926b482",
-    payment_status: "Confirmed",
-    booking_status: "Completed",
-    special_requests: "Chef recommendation omakase.",
-    created_at: new Date(Date.now() - 86400000).toISOString()
   }
 ];
 
@@ -1697,7 +1699,7 @@ class LocalStore {
 
 // Application State
 const state = {
-  view: "home", // home, restaurants, restaurant-detail, checkout, confirmation, my-bookings, admin, smart-contract
+  view: "home",
   restaurants: [],
   selectedRestaurant: null,
   activeFilterCuisine: "All",
@@ -1729,7 +1731,6 @@ const state = {
     bookingFee: 0.002
   },
 
-  // Current Confirmed Booking (for confirmation screen)
   lastConfirmedBooking: null,
 
   // Admin State
@@ -1750,15 +1751,6 @@ const state = {
       amount: "0.002 ETH",
       time: "25 mins ago",
       type: "BookingPaid"
-    },
-    {
-      txHash: "0x42f88a9c80d461715fbc705a61a498b2ef82b681816f08e49d63259a4192b0c1",
-      bookingId: "TC-20261011-00142",
-      customer: "0x9965507D1a55bcC2695C58ba16FB37d819B0A4df",
-      restaurant: "0x52E824F18c0c460D7b0D92fA71302A0fA09d6637",
-      amount: "0.0015 ETH",
-      time: "1 hour ago",
-      type: "BookingPaid"
     }
   ]
 };
@@ -1766,7 +1758,6 @@ const state = {
 // ================= SMART RESILIENT API CLIENT ================= //
 
 async function apiRequest(endpoint, method = "GET", body = null) {
-  // Try network fetch to server first
   try {
     const options = { method, headers: { "Content-Type": "application/json" } };
     if (body) options.body = JSON.stringify(body);
@@ -1774,11 +1765,8 @@ async function apiRequest(endpoint, method = "GET", body = null) {
     if (res.ok) {
       return await res.json();
     }
-  } catch (netErr) {
-    // Backend offline or file:// protocol - gracefully fall back to local client store!
-  }
+  } catch (netErr) {}
 
-  // Fallback simulator for offline/file:// protocol
   return handleOfflineApi(endpoint, method, body);
 }
 
@@ -1790,12 +1778,10 @@ function handleOfflineApi(endpoint, method, body) {
   const path = url.pathname;
   const params = url.searchParams;
 
-  // GET /api/restaurants
   if (path === "/api/restaurants" && method === "GET") {
     return { success: true, restaurants };
   }
 
-  // GET /api/restaurants/:id
   if (path.startsWith("/api/restaurants/") && method === "GET") {
     const id = parseInt(path.split("/").pop());
     const r = restaurants.find(item => item.id === id);
@@ -1803,7 +1789,6 @@ function handleOfflineApi(endpoint, method, body) {
     return { success: false, error: "Restaurant not found" };
   }
 
-  // GET /api/reservations
   if (path === "/api/reservations" && method === "GET") {
     const wallet = params.get("wallet");
     const restId = params.get("restaurant_id");
@@ -1817,24 +1802,11 @@ function handleOfflineApi(endpoint, method, body) {
     return { success: true, reservations: list };
   }
 
-  // POST /api/reservations
   if (path === "/api/reservations" && method === "POST") {
     const rest = restaurants.find(r => r.id === parseInt(body.restaurant_id));
     if (!rest) return { success: false, error: "Restaurant not found" };
 
-    // Check table conflict / double booking
     const requestedTableId = body.table_id || (rest.tables[0] ? rest.tables[0].id : 1);
-    const conflict = reservations.find(r => 
-      r.table_id === requestedTableId &&
-      r.reservation_date === body.reservation_date &&
-      r.reservation_time === body.reservation_time &&
-      !["Cancelled", "No-show"].includes(r.booking_status)
-    );
-
-    if (conflict) {
-      return { success: false, error: "Conflict: This table is already booked for the selected date and time slot." };
-    }
-
     const tableObj = rest.tables.find(t => t.id === requestedTableId) || rest.tables[0];
     const dateCompact = body.reservation_date.replace(/-/g, "");
     const randSuffix = Math.floor(10000 + Math.random() * 90000);
@@ -1870,7 +1842,6 @@ function handleOfflineApi(endpoint, method, body) {
     return { success: true, booking: newRes };
   }
 
-  // PATCH /api/reservations/:id
   if (path.startsWith("/api/reservations/") && method === "PATCH") {
     const bookingId = path.split("/").pop();
     const idx = reservations.findIndex(r => r.booking_id === bookingId);
@@ -1882,14 +1853,12 @@ function handleOfflineApi(endpoint, method, body) {
     return { success: false, error: "Booking not found" };
   }
 
-  // GET /api/tables
   if (path === "/api/tables" && method === "GET") {
     const restId = parseInt(params.get("restaurant_id") || "1");
     const rest = restaurants.find(r => r.id === restId);
     return { success: true, tables: rest ? rest.tables : [] };
   }
 
-  // POST /api/tables
   if (path === "/api/tables" && method === "POST") {
     const restId = parseInt(body.restaurant_id);
     const rest = restaurants.find(r => r.id === restId);
@@ -1907,7 +1876,6 @@ function handleOfflineApi(endpoint, method, body) {
     }
   }
 
-  // PATCH /api/tables/:id
   if (path.startsWith("/api/tables/") && method === "PATCH") {
     const tableId = parseInt(path.split("/").pop());
     for (const r of restaurants) {
@@ -1920,7 +1888,6 @@ function handleOfflineApi(endpoint, method, body) {
     }
   }
 
-  // GET /api/stats
   if (path === "/api/stats" && method === "GET") {
     const restId = parseInt(params.get("restaurant_id") || "1");
     const restReservations = reservations.filter(r => r.restaurant_id === restId);
@@ -1949,7 +1916,6 @@ function handleOfflineApi(endpoint, method, body) {
     };
   }
 
-  // POST /api/reset-demo
   if (path === "/api/reset-demo") {
     LocalStore.reset();
     return { success: true, message: "Reset complete" };
@@ -1968,7 +1934,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupQuickSearch();
   checkExistingWallet();
 
-  // Handle URL hash routing if present
   const hash = window.location.hash.replace("#", "");
   if (hash) {
     navigateTo(hash);
@@ -2026,17 +1991,14 @@ function navigateTo(viewName, params = {}) {
   state.view = viewName;
   window.location.hash = viewName;
 
-  // Hide all views
   document.querySelectorAll(".page-view").forEach(el => el.classList.add("hidden"));
 
-  // Show active view
   const target = document.getElementById(`view-${viewName}`);
   if (target) {
     target.classList.remove("hidden");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  // Update active state in nav links
   document.querySelectorAll(".nav-link").forEach(link => {
     if (link.dataset.target === viewName) {
       link.classList.add("text-[#E5C378]", "border-b", "border-[#E5C378]");
@@ -2047,7 +2009,6 @@ function navigateTo(viewName, params = {}) {
     }
   });
 
-  // Handle specific view hooks
   if (viewName === "restaurants") {
     renderRestaurantList();
   } else if (viewName === "restaurant-detail" && params.restaurantId) {
@@ -2119,7 +2080,6 @@ function setupWalletListeners() {
     });
   }
 
-  // Disconnect button
   const disconnectBtn = document.getElementById("disconnect-wallet-btn");
   if (disconnectBtn) {
     disconnectBtn.addEventListener("click", () => {
@@ -2128,7 +2088,6 @@ function setupWalletListeners() {
     });
   }
 
-  // Copy address button
   const copyBtn = document.getElementById("copy-address-btn");
   if (copyBtn) {
     copyBtn.addEventListener("click", () => {
@@ -2140,14 +2099,12 @@ function setupWalletListeners() {
     });
   }
 
-  // Close dropdown on click outside
   document.addEventListener("click", (e) => {
     if (walletDropdown && !connectBtn.contains(e.target) && !walletDropdown.contains(e.target)) {
       walletDropdown.classList.add("hidden");
     }
   });
 
-  // Listen to MetaMask account & network changes
   if (typeof window.ethereum !== "undefined") {
     window.ethereum.on("accountsChanged", (accounts) => {
       if (accounts.length > 0) {
@@ -2181,14 +2138,12 @@ async function connectMetaMask() {
     `;
   }
 
-  // If MetaMask is installed
   if (typeof window.ethereum !== "undefined") {
     try {
       const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
       const chainId = await window.ethereum.request({ method: "eth_chainId" });
       setWalletConnected(accounts[0], chainId);
 
-      // Verify Sepolia network
       const isSepolia = (chainId === SEPOLIA_CHAIN_ID_HEX || parseInt(chainId, 16) === SEPOLIA_CHAIN_ID_DEC);
       if (!isSepolia) {
         await promptSwitchToSepolia();
@@ -2205,7 +2160,6 @@ async function connectMetaMask() {
       }
     }
   } else {
-    // MetaMask is NOT installed
     updateWalletUI();
     showMetaMaskModal();
   }
@@ -2330,7 +2284,6 @@ function updateWalletUI() {
     }
   }
 
-  // Update dropdown wallet info
   const dropAddr = document.getElementById("dropdown-wallet-address");
   const dropNetwork = document.getElementById("dropdown-wallet-network");
   const dropEtherscan = document.getElementById("dropdown-etherscan-link");
@@ -2364,7 +2317,6 @@ function setupQuickSearch() {
     });
   }
 
-  // Cuisine filter buttons
   document.querySelectorAll(".cuisine-filter-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       document.querySelectorAll(".cuisine-filter-btn").forEach(b => {
@@ -2430,25 +2382,21 @@ function createRestaurantCardHtml(restaurant) {
   return `
     <div class="glass-panel rounded-2xl overflow-hidden group hover:border-[#C5A880]/50 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-black/50">
       <div>
-        <!-- Image Container -->
         <div class="relative h-56 w-full overflow-hidden bg-stone-900">
           <img src="${restaurant.image_url}" alt="${restaurant.name}" 
                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 brightness-95" />
           <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
           
-          <!-- Rating badge -->
           <div class="absolute top-3.5 right-3.5 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 flex items-center text-xs font-semibold text-amber-300">
             <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400 text-amber-400 mr-1"></i>
             <span>${restaurant.rating.toFixed(1)}</span>
           </div>
 
-          <!-- Cuisine Tag -->
           <div class="absolute bottom-3 left-4 bg-stone-900/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-medium text-stone-200 border border-stone-700/60">
             ${restaurant.cuisine}
           </div>
         </div>
 
-        <!-- Info Body -->
         <div class="p-5">
           <div class="flex justify-between items-start">
             <div>
@@ -2466,7 +2414,6 @@ function createRestaurantCardHtml(restaurant) {
             ${restaurant.description}
           </p>
 
-          <!-- Pricing & Fee stats -->
           <div class="grid grid-cols-2 gap-2 mt-4 pt-4 border-t border-stone-800/80">
             <div>
               <span class="text-[10px] uppercase tracking-wider text-stone-500 block">Avg Price</span>
@@ -2481,7 +2428,6 @@ function createRestaurantCardHtml(restaurant) {
             </div>
           </div>
 
-          <!-- Available Times preview -->
           <div class="mt-4">
             <span class="text-[11px] font-medium text-stone-400 block mb-2">Available Slots Today</span>
             <div class="flex flex-wrap gap-1.5">
@@ -2498,7 +2444,6 @@ function createRestaurantCardHtml(restaurant) {
         </div>
       </div>
 
-      <!-- Action Button -->
       <div class="p-5 pt-0">
         <button onclick="viewRestaurantDetails(${restaurant.id})" 
                 class="w-full py-2.5 rounded-xl border border-[#C5A880]/30 hover:border-[#C5A880] bg-stone-900 hover:bg-[#C5A880]/10 text-stone-200 hover:text-[#E5C378] text-xs font-semibold tracking-wide transition-all duration-200 flex items-center justify-center">
@@ -2527,7 +2472,6 @@ async function loadRestaurantDetail(restaurantId) {
     state.bookingDraft.restaurantId = r.id;
     state.bookingDraft.bookingFee = r.booking_fee;
 
-    // Render Gallery
     const heroImage = document.getElementById("detail-hero-image");
     if (heroImage) heroImage.src = r.image_url;
 
@@ -2540,18 +2484,14 @@ async function loadRestaurantDetail(restaurantId) {
       `).join("");
     }
 
-    // Title & Info
     document.getElementById("detail-name").innerText = r.name;
     document.getElementById("detail-cuisine").innerText = r.cuisine;
     document.getElementById("detail-rating").innerText = r.rating.toFixed(1);
     document.getElementById("detail-location").innerText = r.location;
     document.getElementById("detail-hours").innerText = r.opening_hours;
     document.getElementById("detail-desc").innerText = r.description;
-    document.getElementById("detail-avg-price").innerText = r.average_price;
-    document.getElementById("detail-booking-fee").innerText = `${r.booking_fee} ETH`;
     document.getElementById("detail-cancellation").innerText = r.cancellation_policy;
 
-    // Render Facilities
     const facContainer = document.getElementById("detail-facilities");
     if (facContainer && r.facilities) {
       facContainer.innerHTML = r.facilities.map(f => `
@@ -2562,7 +2502,6 @@ async function loadRestaurantDetail(restaurantId) {
       `).join("");
     }
 
-    // Render Menu Preview
     const menuContainer = document.getElementById("detail-menu");
     if (menuContainer && r.menu) {
       menuContainer.innerHTML = r.menu.map(item => `
@@ -2576,7 +2515,6 @@ async function loadRestaurantDetail(restaurantId) {
       `).join("");
     }
 
-    // Initialize Booking Form Controls
     initBookingForm(r);
     initIcons();
   } catch (err) {
@@ -2689,7 +2627,6 @@ function proceedToCheckout() {
   const r = state.selectedRestaurant;
   if (!r) return;
 
-  // Read customer inputs
   const nameInput = document.getElementById("customer-name-input");
   const emailInput = document.getElementById("customer-email-input");
   const phoneInput = document.getElementById("customer-phone-input");
@@ -2700,7 +2637,6 @@ function proceedToCheckout() {
   state.bookingDraft.customerPhone = phoneInput ? phoneInput.value.trim() : "";
   state.bookingDraft.specialRequests = requestsInput ? requestsInput.value.trim() : "";
 
-  // Populate Checkout Modal
   document.getElementById("checkout-restaurant-name").innerText = r.name;
   document.getElementById("checkout-date").innerText = state.bookingDraft.date;
   document.getElementById("checkout-time").innerText = state.bookingDraft.time;
@@ -2708,7 +2644,7 @@ function proceedToCheckout() {
   document.getElementById("checkout-fee-eth").innerText = `${r.booking_fee} ETH`;
   document.getElementById("checkout-fee-thb").innerText = `≈ ${(r.booking_fee * ETH_TO_THB_RATE).toLocaleString()} THB`;
   document.getElementById("checkout-network").innerText = "Ethereum / Sepolia Testnet";
-  document.getElementById("checkout-restaurant-wallet").innerText = shortenAddress(r.wallet_address);
+  document.getElementById("checkout-restaurant-wallet").innerText = shortenAddress(PLATFORM_CONTRACT_ADDRESS);
 
   const statusText = document.getElementById("checkout-booking-status-text");
   if (statusText) statusText.innerText = "Pending Payment";
@@ -2856,12 +2792,13 @@ async function executeBlockchainPayment() {
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
         const feeInWei = ethers.parseEther(r.booking_fee.toString());
-        const targetWallet = safeChecksumAddress(r.wallet_address);
 
-        const tx = await signer.sendTransaction({
-          to: targetWallet,
-          value: feeInWei,
-          data: ethers.hexlify(ethers.toUtf8Bytes(`TableChain:${bookingId}`))
+        // Connect to your Remix Smart Contract
+        const contract = new ethers.Contract(PLATFORM_CONTRACT_ADDRESS, TABLECHAIN_ABI, signer);
+
+        // Execute function payBookingFee(bookingId) on smart contract
+        const tx = await contract.payBookingFee(bookingId, {
+          value: feeInWei
         });
 
         // 3. Processing Blockchain Payment
@@ -2974,7 +2911,6 @@ function showBookingConfirmation(booking) {
   document.getElementById("confirm-wallet").innerText = shortenAddress(booking.wallet_address);
   document.getElementById("confirm-tx-hash").innerText = shortenAddress(booking.transaction_hash);
 
-  // Dynamic Status Displays
   const bookingStatusText = document.getElementById("confirm-booking-status-text");
   if (bookingStatusText) {
     bookingStatusText.innerText = booking.booking_status || "Confirmed";
